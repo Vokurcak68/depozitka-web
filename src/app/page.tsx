@@ -60,8 +60,8 @@ export default function HomePage() {
                 <Image
                   src="/brand/logo-transparent.png"
                   alt="Depozitka logo"
-                  width={1251}
-                  height={1030}
+                  width={1440}
+                  height={1440}
                   priority
                   className="relative w-full h-auto drop-shadow-2xl"
                 />
