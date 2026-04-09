@@ -183,18 +183,18 @@ Bezpečná platba pro český online trh
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex items-start gap-4">
             <div className="h-10 w-10 rounded-lg bg-navy-50 flex items-center justify-center flex-shrink-0">
-              <Bank className="h-6 w-6 text-navy-700" />
+              <Lock className="h-6 w-6 text-navy-700" />
             </div>
             <div>
-              <h4 className="font-bold text-navy-900 mb-1">Úschovní účet ve FIO</h4>
+              <h4 className="font-bold text-navy-900 mb-1">Šifrovaná komunikace</h4>
               <p className="text-sm text-navy-600">
-                Vaše peníze fyzicky drží regulovaná česká banka, ne naše s.r.o.
+                TLS 1.3, HMAC-SHA256 podpis webhooků a pravidelné bezpečnostní audity.
               </p>
             </div>
           </div>
           <div className="flex items-start gap-4">
             <div className="h-10 w-10 rounded-lg bg-navy-50 flex items-center justify-center flex-shrink-0">
-              <Lock className="h-6 w-6 text-navy-700" />
+              <ShieldCheck className="h-6 w-6 text-navy-700" />
             </div>
             <div>
               <h4 className="font-bold text-navy-900 mb-1">GDPR &amp; audit log</h4>

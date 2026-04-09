@@ -4,7 +4,6 @@ import Button from "@/components/Button";
 import {
   ShieldCheck,
   Lock,
-  Bank,
   Scale,
   CheckCircle,
   Clock,
@@ -14,20 +13,10 @@ import {
 export const metadata: Metadata = {
   title: "Bezpečnost",
   description:
-    "Jak Depozitka chrání vaše peníze i data. Úschovní účet ve FIO bance, GDPR, auditovatelné logy, šifrovaná komunikace a nezávislá arbitráž.",
+    "Jak Depozitka chrání vaše peníze i data. GDPR, auditovatelné logy, šifrovaná komunikace a nezávislá arbitráž.",
 };
 
 const pillars = [
-  {
-    icon: Bank,
-    title: "Peníze drží banka, ne my",
-    desc: "Úschovní účet vedeme u FIO banky. Vaše prostředky fyzicky leží na bankovním účtu, nejsou součástí majetku naší společnosti a nelze na ně sáhnout ani v případě insolvence.",
-    points: [
-      "Samostatný úschovní účet oddělený od provozních prostředků",
-      "FIO banka je regulována ČNB",
-      "Denní rekonciliace příchozích a odchozích plateb",
-    ],
-  },
   {
     icon: Lock,
     title: "Šifrovaná komunikace",
@@ -76,9 +65,8 @@ export default function BezpecnostPage() {
               <span className="text-gold-400">Je to architektura.</span>
             </h1>
             <p className="text-lg sm:text-xl text-navy-100 leading-relaxed">
-              Bezpečnost stavíme na čtyřech pilířích: regulovaná banka,
-              šifrovaná infrastruktura, přísná ochrana osobních údajů a
-              nezávislá arbitráž sporů.
+              Bezpečnost stavíme na třech pilířích: šifrované infrastruktuře,
+              přísné ochraně osobních údajů a nezávislé arbitráži sporů.
             </p>
           </div>
         </div>
@@ -172,16 +160,6 @@ export default function BezpecnostPage() {
             title="Právní rámec"
           />
           <div className="space-y-4">
-            <div className="bg-navy-50 rounded-xl p-6 border border-navy-100">
-              <h3 className="font-bold text-navy-900 mb-2">
-                Zákon o platebním styku (370/2017 Sb.)
-              </h3>
-              <p className="text-sm text-navy-700 leading-relaxed">
-                Depozitka působí jako poskytovatel úschovy třetí straně
-                v modelu, kdy neprovádí platební služby ve smyslu PSD2 —
-                peníze fyzicky drží licencovaná banka.
-              </p>
-            </div>
             <div className="bg-navy-50 rounded-xl p-6 border border-navy-100">
               <h3 className="font-bold text-navy-900 mb-2">
                 GDPR (EU 2016/679)
