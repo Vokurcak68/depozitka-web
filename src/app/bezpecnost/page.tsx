@@ -14,16 +14,16 @@ import {
 export const metadata: Metadata = {
   title: "Bezpečnost",
   description:
-    "Jak Depozitka chrání vaše peníze i data. Escrow účet ve FIO bance, GDPR, auditovatelné logy, šifrovaná komunikace a nezávislá arbitráž.",
+    "Jak Depozitka chrání vaše peníze i data. Úschovní účet ve FIO bance, GDPR, auditovatelné logy, šifrovaná komunikace a nezávislá arbitráž.",
 };
 
 const pillars = [
   {
     icon: Bank,
     title: "Peníze drží banka, ne my",
-    desc: "Escrow účet vedeme u FIO banky. Vaše prostředky fyzicky leží na bankovním účtu, nejsou součástí majetku naší společnosti a nelze na ně sáhnout ani v případě insolvence.",
+    desc: "Úschovní účet vedeme u FIO banky. Vaše prostředky fyzicky leží na bankovním účtu, nejsou součástí majetku naší společnosti a nelze na ně sáhnout ani v případě insolvence.",
     points: [
-      "Samostatný escrow účet oddělený od provozních prostředků",
+      "Samostatný úschovní účet oddělený od provozních prostředků",
       "FIO banka je regulována ČNB",
       "Denní rekonciliace příchozích a odchozích plateb",
     ],
@@ -45,7 +45,7 @@ const pillars = [
     points: [
       "Minimalizace dat — jen co je nutné pro transakci",
       "Právo na výmaz po uplynutí zákonné lhůty",
-      "DPIA zpracována pro escrow agendu",
+      "DPIA zpracována pro agendu úschovy prostředků",
     ],
   },
   {

@@ -28,7 +28,7 @@ export default function HomePage() {
             <div className="lg:col-span-7 max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-sm font-medium text-gold-300 mb-6">
                 <Sparkles className="h-4 w-4" />
-                Escrow platba pro český online trh
+Bezpečná platba pro český online trh
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
                 Peníze držíme my,<br />
@@ -76,7 +76,7 @@ export default function HomePage() {
         <SectionHeader
           eyebrow="Proč Depozitka"
           title="Tři strany, jeden bezpečný obchod"
-          subtitle="Transparentní escrow systém, který chrání kupujícího, prodávajícího i provozovatele marketplace."
+          subtitle="Transparentní systém úschovy plateb, který chrání kupujícího, prodávajícího i provozovatele marketplace."
         />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-navy-50 rounded-2xl p-8 border border-navy-100">
@@ -133,7 +133,7 @@ export default function HomePage() {
               num: "01",
               icon: CreditCard,
               title: "Kupující zaplatí",
-              desc: "Bankovním převodem s variabilním symbolem. Peníze přijdou na naše escrow konto.",
+              desc: "Bankovním převodem s variabilním symbolem. Peníze přijdou na náš úschovní účet.",
             },
             {
               num: "02",
@@ -186,7 +186,7 @@ export default function HomePage() {
               <Bank className="h-6 w-6 text-navy-700" />
             </div>
             <div>
-              <h4 className="font-bold text-navy-900 mb-1">Escrow účet ve FIO</h4>
+              <h4 className="font-bold text-navy-900 mb-1">Úschovní účet ve FIO</h4>
               <p className="text-sm text-navy-600">
                 Vaše peníze fyzicky drží regulovaná česká banka, ne naše s.r.o.
               </p>

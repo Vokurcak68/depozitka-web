@@ -127,7 +127,7 @@ export default function KontaktPage() {
               <h3 className="font-bold text-navy-900 mb-4">Bankovní spojení</h3>
               <dl className="space-y-3 text-sm">
                 <div>
-                  <dt className="text-navy-500 mb-1">Escrow účet (FIO)</dt>
+                  <dt className="text-navy-500 mb-1">Úschovní účet (FIO)</dt>
                   <dd className="text-navy-900 font-mono font-medium">
                     2900000710/2010
                   </dd>
@@ -145,7 +145,7 @@ export default function KontaktPage() {
                   </dd>
                 </div>
                 <div className="pt-2 text-xs text-navy-500">
-                  Escrow účet slouží výhradně k úschově prostředků
+                  Úschovní účet slouží výhradně k úschově prostředků
                   klientů, není majetkem společnosti.
                 </div>
               </dl>

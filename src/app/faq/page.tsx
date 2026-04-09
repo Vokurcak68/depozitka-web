@@ -15,12 +15,12 @@ const faqs = [
     category: "Základy",
     items: [
       {
-        q: "Co je to escrow / úschova?",
+        q: "Co je to úschova peněz?",
         a: "Je to nezávislá úschova peněz třetí stranou. Kupující zaplatí nám, my peníze držíme, a prodávajícímu je vyplatíme až po potvrzení, že zboží dorazilo a odpovídá popisu. Pokud něco nesedí, peníze vracíme kupujícímu.",
       },
       {
         q: "Pro koho je Depozitka určena?",
-        a: "Primárně pro online bazary, marketplace platformy a nezávislé prodejce, kteří chtějí kupujícím nabídnout bezpečnou platbu bez nutnosti řešit vlastní escrow systém.",
+        a: "Primárně pro online bazary, marketplace platformy a nezávislé prodejce, kteří chtějí kupujícím nabídnout bezpečnou platbu bez nutnosti řešit vlastní systém úschovy plateb.",
       },
       {
         q: "Jak se Depozitka liší od platební brány?",
@@ -33,7 +33,7 @@ const faqs = [
     items: [
       {
         q: "Jak probíhá platba?",
-        a: "Kupující platí bankovním převodem na naše escrow konto ve FIO bance. Do emailu dostane číslo účtu, variabilní symbol a QR kód pro rychlou platbu. Platby automaticky párujeme podle VS.",
+        a: "Kupující platí bankovním převodem na náš úschovní účet ve FIO bance. Do emailu dostane číslo účtu, variabilní symbol a QR kód pro rychlou platbu. Platby automaticky párujeme podle VS.",
       },
       {
         q: "Jak dlouho trvá výplata prodávajícímu?",

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const included = [
-  "Escrow účet ve FIO bance",
+  "Úschovní účet ve FIO bance",
   "Automatické párování plateb dle VS",
   "Napojení na 6 přepravců (ČP, Zásilkovna, PPL, DPD, GLS, Geis)",
   "Email notifikace oběma stranám",

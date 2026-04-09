@@ -15,7 +15,7 @@ import {
 export const metadata: Metadata = {
   title: "Jak to funguje",
   description:
-    "Podrobný popis escrow procesu Depozitka — od zadání transakce přes platbu, odeslání a potvrzení převzetí až po výplatu prodávajícímu.",
+    "Podrobný popis procesu Depozitka — od zadání transakce přes platbu, odeslání a potvrzení převzetí až po výplatu prodávajícímu.",
 };
 
 const steps = [
@@ -38,9 +38,9 @@ const steps = [
     title: "Kupující zaplatí do úschovy",
     role: "Kupující",
     time: "Do 24 hodin",
-    desc: "Kupující zaplatí bankovním převodem na naše escrow konto ve FIO bance. Automaticky párujeme příchozí platby podle variabilního symbolu — obvykle do 2 minut od připsání.",
+    desc: "Kupující zaplatí bankovním převodem na náš úschovní účet ve FIO bance. Automaticky párujeme příchozí platby podle variabilního symbolu — obvykle do 2 minut od připsání.",
     details: [
-      "Platba jde na transparentní escrow účet, ne na naše s.r.o.",
+      "Platba jde na transparentní úschovní účet, ne na naše s.r.o.",
       "Oba účastníci vidí potvrzení o přijetí v reálném čase",
       "Nezaplacená transakce se po 24 hodinách automaticky ruší",
     ],

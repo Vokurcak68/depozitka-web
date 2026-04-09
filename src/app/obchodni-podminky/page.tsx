@@ -5,7 +5,7 @@ import Section from "@/components/Section";
 export const metadata: Metadata = {
   title: "Obchodní podmínky",
   description:
-    "Všeobecné obchodní podmínky služby Depozitka — pravidla používání escrow služby, práva a povinnosti účastníků transakcí.",
+    "Všeobecné obchodní podmínky služby Depozitka — pravidla používání služby, práva a povinnosti účastníků transakcí.",
 };
 
 export default function ObchodniPodminkyPage() {
@@ -63,7 +63,7 @@ export default function ObchodniPodminkyPage() {
           <ul className="space-y-2 text-navy-700">
             <li>
               <strong>Služba</strong> — webová aplikace a API pro správu
-              escrow transakcí dostupné na doméně depozitka.eu.
+              transakcí dostupné na doméně depozitka.eu.
             </li>
             <li>
               <strong>Kupující</strong> — osoba, která hradí kupní cenu do

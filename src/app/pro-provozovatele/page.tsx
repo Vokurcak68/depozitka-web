@@ -36,7 +36,7 @@ const benefits = [
   {
     icon: Package,
     title: "Bez licencí a účetnictví",
-    desc: "Nemusíte řešit PSD2, AML ani vlastní escrow účet. Všechno za vás udělá Depozitka.",
+    desc: "Nemusíte řešit PSD2, AML ani vlastní úschovní účet. Všechno za vás udělá Depozitka.",
   },
 ];
 
@@ -105,7 +105,7 @@ export default function ProProvozovatelePage() {
               <span className="text-gold-400">na pár řádků kódu</span>
             </h1>
             <p className="text-lg sm:text-xl text-navy-100 leading-relaxed mb-10">
-              Přidejte do svého bazaru nebo platformy escrow systém, aniž
+              Přidejte do svého bazaru nebo platformy bezpečné platby, aniž
               byste museli zakládat vlastní účetnictví, řešit AML nebo
               PSD2 licence. Depozitka se postará o zbytek.
             </p>
