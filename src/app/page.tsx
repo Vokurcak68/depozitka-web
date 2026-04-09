@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Section, { SectionHeader } from "@/components/Section";
 import Button from "@/components/Button";
 import {
@@ -22,27 +23,51 @@ export default function HomePage() {
       <section className="bg-navy-gradient text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-40" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-sm font-medium text-gold-300 mb-6">
-              <Sparkles className="h-4 w-4" />
-              Escrow platba pro český online trh
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            {/* Text column */}
+            <div className="lg:col-span-7 max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-sm font-medium text-gold-300 mb-6">
+                <Sparkles className="h-4 w-4" />
+                Escrow platba pro český online trh
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+                Peníze držíme my,<br />
+                <span className="text-gold-400">dokud nedostaneš zboží.</span>
+              </h1>
+              <p className="text-lg sm:text-xl text-navy-100 leading-relaxed mb-10 max-w-2xl">
+                Depozitka je nezávislá úschova plateb pro bazary, marketplace
+                a prodejce. Kupující platí s jistotou, prodávající s jasnými
+                pravidly. Konec podvodů v online obchodování.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button href="/jak-to-funguje" variant="primary" size="lg">
+                  Jak to funguje <ArrowRight className="h-5 w-5" />
+                </Button>
+                <Button href="/pro-provozovatele" variant="outline" size="lg">
+                  Pro provozovatele bazarů
+                </Button>
+              </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              Peníze držíme my,<br />
-              <span className="text-gold-400">dokud dostaneš zboží.</span>
-            </h1>
-            <p className="text-lg sm:text-xl text-navy-100 leading-relaxed mb-10 max-w-2xl">
-              Depozitka je nezávislá úschova plateb pro bazary, marketplace
-              a prodejce. Kupující platí s jistotou, prodávající s jasnými
-              pravidly. Konec podvodů v online obchodování.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button href="/jak-to-funguje" variant="primary" size="lg">
-                Jak to funguje <ArrowRight className="h-5 w-5" />
-              </Button>
-              <Button href="/pro-provozovatele" variant="outline" size="lg">
-                Pro provozovatele bazarů
-              </Button>
+
+            {/* Logo column */}
+            <div className="lg:col-span-5 flex justify-center lg:justify-end">
+              <div className="relative w-56 sm:w-72 md:w-80 lg:w-full lg:max-w-md aspect-square">
+                {/* soft glow */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 rounded-full bg-gold-400/20 blur-3xl"
+                />
+                <div className="relative h-full w-full rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8 lg:p-10 flex items-center justify-center shadow-2xl">
+                  <Image
+                    src="/brand/logo.jpg"
+                    alt="Depozitka logo"
+                    width={512}
+                    height={512}
+                    priority
+                    className="w-full h-full object-contain drop-shadow-xl"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
