@@ -10,7 +10,7 @@ export default function Footer() {
             <div className="flex items-center gap-3 mb-4">
               <div className="h-10 w-10 relative bg-white rounded p-1">
                 <Image
-                  src="/brand/logo.jpg"
+                  src="/brand/logo-transparent.png"
                   alt="Depozitka"
                   fill
                   className="object-contain p-0.5"

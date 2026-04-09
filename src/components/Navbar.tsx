@@ -23,7 +23,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center gap-3">
             <div className="h-10 w-10 relative flex-shrink-0">
               <Image
-                src="/brand/logo.jpg"
+                src="/brand/logo-transparent.png"
                 alt="Depozitka"
                 fill
                 className="object-contain"

@@ -51,22 +51,20 @@ export default function HomePage() {
 
             {/* Logo column */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
-              <div className="relative w-56 sm:w-72 md:w-80 lg:w-full lg:max-w-md aspect-square">
-                {/* soft glow */}
+              <div className="relative w-64 sm:w-80 md:w-96 lg:w-full lg:max-w-lg">
+                {/* soft gold glow behind logo */}
                 <div
                   aria-hidden="true"
-                  className="absolute inset-0 rounded-full bg-gold-400/20 blur-3xl"
+                  className="absolute inset-0 -m-8 rounded-full bg-gold-400/20 blur-3xl"
                 />
-                <div className="relative h-full w-full rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8 lg:p-10 flex items-center justify-center shadow-2xl">
-                  <Image
-                    src="/brand/logo.jpg"
-                    alt="Depozitka logo"
-                    width={512}
-                    height={512}
-                    priority
-                    className="w-full h-full object-contain drop-shadow-xl"
-                  />
-                </div>
+                <Image
+                  src="/brand/logo-transparent.png"
+                  alt="Depozitka logo"
+                  width={1251}
+                  height={1030}
+                  priority
+                  className="relative w-full h-auto drop-shadow-2xl"
+                />
               </div>
             </div>
           </div>
