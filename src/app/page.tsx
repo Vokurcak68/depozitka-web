@@ -58,7 +58,7 @@ Bezpečná platba pro český online trh
                   className="absolute inset-0 -m-8 rounded-full bg-gold-400/20 blur-3xl"
                 />
                 <Image
-                  src="/brand/logo-transparent.png"
+                  src="/brand/logo-gold.png"
                   alt="Depozitka logo"
                   width={1440}
                   height={1440}
