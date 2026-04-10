@@ -16,6 +16,24 @@ export const metadata: Metadata = {
   title: "Jak to funguje",
   description:
     "Podrobný popis procesu Depozitka — od zadání transakce přes platbu, odeslání a potvrzení převzetí až po výplatu prodávajícímu.",
+  alternates: {
+    canonical: "/jak-to-funguje",
+  },
+  openGraph: {
+    title: "Jak to funguje | Depozitka",
+    description:
+      "5 kroků bezpečné transakce: platba do úschovy, tracking, potvrzení doručení a výplata prodávajícímu.",
+    url: "https://depozitka.eu/jak-to-funguje",
+    type: "article",
+    images: ["/brand/logo-gold.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Jak to funguje | Depozitka",
+    description:
+      "Podrobný průběh bezpečné platby přes Depozitku krok za krokem.",
+    images: ["/brand/logo-gold.png"],
+  },
 };
 
 const steps = [

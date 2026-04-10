@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import Section, { SectionHeader } from "@/components/Section";
@@ -15,6 +16,30 @@ import {
   Bank,
   Sparkles,
 } from "@/components/Icons";
+
+export const metadata: Metadata = {
+  title: "Depozitka — Bezpečná platba pro každý online obchod",
+  description:
+    "Depozitka je nezávislá úschova plateb pro bazary, marketplace a prodejce. Peníze držíme my, dokud kupující nepotvrdí převzetí zboží.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Depozitka — Bezpečná platba pro každý online obchod",
+    description:
+      "Peníze držíme my, dokud nedostaneš zboží. Ochrana proti podvodům pro bazary, marketplace i nezávislé prodejce.",
+    url: "https://depozitka.eu",
+    type: "website",
+    images: ["/brand/logo-gold.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Depozitka — Bezpečná platba pro každý online obchod",
+    description:
+      "Peníze držíme my, dokud nedostaneš zboží. Ochrana proti podvodům pro bazary a marketplace.",
+    images: ["/brand/logo-gold.png"],
+  },
+};
 
 export default function HomePage() {
   return (

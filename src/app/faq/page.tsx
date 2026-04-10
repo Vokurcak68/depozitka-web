@@ -8,6 +8,24 @@ export const metadata: Metadata = {
   title: "Časté otázky",
   description:
     "Odpovědi na nejčastější dotazy ke službě Depozitka — jak platba funguje, co se děje při sporu, kolik to stojí a jak chráníme vaše peníze.",
+  alternates: {
+    canonical: "/faq",
+  },
+  openGraph: {
+    title: "FAQ | Depozitka",
+    description:
+      "Nejčastější dotazy k bezpečné platbě přes Depozitku: platby, spory, provize i integrace.",
+    url: "https://depozitka.eu/faq",
+    type: "article",
+    images: ["/brand/logo-gold.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FAQ | Depozitka",
+    description:
+      "Odpovědi na nejčastější dotazy ke službě Depozitka.",
+    images: ["/brand/logo-gold.png"],
+  },
 };
 
 const faqs = [
@@ -107,8 +125,27 @@ const faqs = [
 ];
 
 export default function FaqPage() {
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.flatMap((group) =>
+      group.items.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.a,
+        },
+      }))
+    ),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* HERO */}
       <section className="bg-navy-gradient text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-40" />

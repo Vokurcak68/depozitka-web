@@ -6,6 +6,23 @@ export const metadata: Metadata = {
   title: "Ochrana osobních údajů",
   description:
     "Zásady zpracování osobních údajů služby Depozitka v souladu s GDPR — jaká data zpracováváme, proč, jak dlouho a jaká máte práva.",
+  alternates: {
+    canonical: "/ochrana-udaju",
+  },
+  openGraph: {
+    title: "Ochrana osobních údajů | Depozitka",
+    description:
+      "Jak Depozitka zpracovává osobní údaje v souladu s GDPR.",
+    url: "https://depozitka.eu/ochrana-udaju",
+    type: "article",
+    images: ["/brand/logo-gold.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ochrana osobních údajů | Depozitka",
+    description: "Zásady zpracování osobních údajů služby Depozitka.",
+    images: ["/brand/logo-gold.png"],
+  },
 };
 
 export default function OchranaUdajuPage() {

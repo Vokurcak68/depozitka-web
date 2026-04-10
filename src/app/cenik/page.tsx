@@ -7,6 +7,24 @@ export const metadata: Metadata = {
   title: "Ceník",
   description:
     "Transparentní ceny Depozitky. Žádné měsíční poplatky, platíte jen z úspěšně dokončené transakce. 5 % z částky, minimálně 15 Kč.",
+  alternates: {
+    canonical: "/cenik",
+  },
+  openGraph: {
+    title: "Ceník Depozitky",
+    description:
+      "Platíte jen za úspěšný obchod. Pro jednotlivce 5 % z transakce, pro marketplace individuálně.",
+    url: "https://depozitka.eu/cenik",
+    type: "website",
+    images: ["/brand/logo-gold.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ceník Depozitky",
+    description:
+      "Transparentní ceny bez měsíčních poplatků.",
+    images: ["/brand/logo-gold.png"],
+  },
 };
 
 const included = [

@@ -15,6 +15,24 @@ export const metadata: Metadata = {
   title: "Pro provozovatele marketplace",
   description:
     "Depozitka pro bazary, marketplace a platformy. REST API, webhooky, sandbox. Integrace za pár hodin, bez PSD2 licence a vlastního účetnictví.",
+  alternates: {
+    canonical: "/pro-provozovatele",
+  },
+  openGraph: {
+    title: "Depozitka pro marketplace | API a webhooky",
+    description:
+      "Integrujte bezpečnou úschovu plateb do svého bazaru přes REST API. Rychlé nasazení a nižší riziko podvodů.",
+    url: "https://depozitka.eu/pro-provozovatele",
+    type: "website",
+    images: ["/brand/logo-gold.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Depozitka pro marketplace | API a webhooky",
+    description:
+      "REST API, webhooky a sandbox pro bezpečné platby v marketplace.",
+    images: ["/brand/logo-gold.png"],
+  },
 };
 
 const benefits = [

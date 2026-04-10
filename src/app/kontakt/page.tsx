@@ -7,6 +7,24 @@ export const metadata: Metadata = {
   title: "Kontakt",
   description:
     "Kontaktujte tým Depozitky. Odpovídáme do 24 hodin v pracovní dny. Podpora, obchod, technická integrace i právní dotazy.",
+  alternates: {
+    canonical: "/kontakt",
+  },
+  openGraph: {
+    title: "Kontakt | Depozitka",
+    description:
+      "Podpora, technická integrace i právní dotazy. Napište nám na info@depozitka.eu.",
+    url: "https://depozitka.eu/kontakt",
+    type: "website",
+    images: ["/brand/logo-gold.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kontakt | Depozitka",
+    description:
+      "Spojte se s týmem Depozitky — odpovídáme do 24 hodin v pracovní dny.",
+    images: ["/brand/logo-gold.png"],
+  },
 };
 
 const departments = [

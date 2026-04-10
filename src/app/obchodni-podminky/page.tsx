@@ -6,6 +6,23 @@ export const metadata: Metadata = {
   title: "Obchodní podmínky",
   description:
     "Všeobecné obchodní podmínky služby Depozitka — pravidla používání služby, práva a povinnosti účastníků transakcí.",
+  alternates: {
+    canonical: "/obchodni-podminky",
+  },
+  openGraph: {
+    title: "Obchodní podmínky | Depozitka",
+    description:
+      "Pravidla používání služby Depozitka pro kupující, prodávající i provozovatele.",
+    url: "https://depozitka.eu/obchodni-podminky",
+    type: "article",
+    images: ["/brand/logo-gold.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Obchodní podmínky | Depozitka",
+    description: "Aktuální podmínky služby Depozitka.",
+    images: ["/brand/logo-gold.png"],
+  },
 };
 
 export default function ObchodniPodminkyPage() {

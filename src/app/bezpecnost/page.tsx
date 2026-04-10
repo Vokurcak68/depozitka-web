@@ -14,6 +14,24 @@ export const metadata: Metadata = {
   title: "Bezpečnost",
   description:
     "Jak Depozitka chrání vaše peníze i data. GDPR, auditovatelné logy, šifrovaná komunikace a nezávislá arbitráž.",
+  alternates: {
+    canonical: "/bezpecnost",
+  },
+  openGraph: {
+    title: "Bezpečnost | Depozitka",
+    description:
+      "Bezpečnostní principy Depozitky: šifrování, ochrana dat a transparentní řešení sporů.",
+    url: "https://depozitka.eu/bezpecnost",
+    type: "website",
+    images: ["/brand/logo-gold.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bezpečnost | Depozitka",
+    description:
+      "Jak chráníme peníze i data při online transakcích.",
+    images: ["/brand/logo-gold.png"],
+  },
 };
 
 const pillars = [
