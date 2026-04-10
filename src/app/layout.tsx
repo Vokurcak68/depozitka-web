@@ -61,9 +61,40 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Depozitka",
+    url: "https://depozitka.eu",
+    logo: "https://depozitka.eu/brand/logo.jpg",
+    email: "info@depozitka.eu",
+    sameAs: [],
+  };
+
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Depozitka",
+    url: "https://depozitka.eu",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://depozitka.eu/faq?q={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
+    inLanguage: "cs-CZ",
+  };
+
   return (
     <html lang="cs">
       <body className="bg-white text-navy-900 antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />
