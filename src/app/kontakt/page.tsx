@@ -99,25 +99,25 @@ export default function KontaktPage() {
                 <div>
                   <dt className="text-navy-500 mb-1">Název</dt>
                   <dd className="text-navy-900 font-medium">
-                    Depozitka s.r.o.
+                    NetMate CZ spol. s r.o.
                   </dd>
                 </div>
                 <div>
                   <dt className="text-navy-500 mb-1">Sídlo</dt>
                   <dd className="text-navy-900 font-medium">
-                    Praha, Česká republika
+                    Rybná 716/24, Staré Město, 110 00 Praha 1
                   </dd>
                 </div>
                 <div>
                   <dt className="text-navy-500 mb-1">IČ / DIČ</dt>
                   <dd className="text-navy-900 font-medium">
-                    doplníme po zápisu
+                    IČO 08034966 / DIČ CZ08034966
                   </dd>
                 </div>
                 <div>
                   <dt className="text-navy-500 mb-1">Spisová značka</dt>
                   <dd className="text-navy-900 font-medium">
-                    Městský soud v Praze
+                    C 311906, Městský soud v Praze
                   </dd>
                 </div>
               </dl>
@@ -144,10 +144,7 @@ export default function KontaktPage() {
                     FIOBCZPPXXX
                   </dd>
                 </div>
-                <div className="pt-2 text-xs text-navy-500">
-                  Úschovní účet slouží výhradně k úschově prostředků
-                  klientů, není majetkem společnosti.
-                </div>
+
               </dl>
             </div>
           </div>
