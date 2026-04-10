@@ -64,7 +64,7 @@ export default function KontaktPage() {
             <a
               key={d.title}
               href={`mailto:${d.email}`}
-              className="group bg-navy-50 rounded-2xl p-8 border border-navy-100 hover:border-gold-400 hover:shadow-md transition"
+              className="group bg-navy-50 rounded-2xl p-8 border border-navy-100 hover:border-gold-400 hover:shadow-md transition flex flex-col"
             >
               <div className="h-12 w-12 rounded-xl bg-gold-400 flex items-center justify-center mb-5">
                 <d.icon className="h-7 w-7 text-navy-900" />
@@ -75,7 +75,7 @@ export default function KontaktPage() {
               <p className="text-navy-600 leading-relaxed mb-4 text-sm">
                 {d.desc}
               </p>
-              <span className="font-mono text-sm font-semibold text-navy-900 group-hover:text-gold-600 transition">
+              <span className="mt-auto font-mono text-sm font-semibold text-navy-900 group-hover:text-gold-600 transition">
                 {d.email} →
               </span>
             </a>
