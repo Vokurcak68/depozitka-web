@@ -1,4 +1,5 @@
-User-agent: *
+User-Agent: *
 Allow: /
 
+Host: https://www.depozitka.eu
 Sitemap: https://www.depozitka.eu/sitemap.xml
