@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "Ceník Depozitky",
     description:
       "Platíte jen za úspěšný obchod. Pro jednotlivce 5 % z transakce, pro marketplace individuálně.",
-    url: "https://depozitka.eu/cenik",
+    url: "https://www.depozitka.eu/cenik",
     type: "website",
     images: ["/brand/logo-gold.png"],
   },

@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://depozitka.eu"),
+  metadataBase: new URL("https://www.depozitka.eu"),
   title: {
     default: "Depozitka — Bezpečná platba pro každý online obchod",
     template: "%s · Depozitka",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "cs_CZ",
-    url: "https://depozitka.eu",
+    url: "https://www.depozitka.eu",
     siteName: "Depozitka",
     title: "Depozitka — Bezpečná platba pro každý online obchod",
     description:
@@ -65,8 +65,8 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Depozitka",
-    url: "https://depozitka.eu",
-    logo: "https://depozitka.eu/brand/logo.jpg",
+    url: "https://www.depozitka.eu",
+    logo: "https://www.depozitka.eu/brand/logo.jpg",
     email: "info@depozitka.eu",
     sameAs: [],
   };
@@ -75,10 +75,10 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Depozitka",
-    url: "https://depozitka.eu",
+    url: "https://www.depozitka.eu",
     potentialAction: {
       "@type": "SearchAction",
-      target: "https://depozitka.eu/faq?q={search_term_string}",
+      target: "https://www.depozitka.eu/faq?q={search_term_string}",
       "query-input": "required name=search_term_string",
     },
     inLanguage: "cs-CZ",

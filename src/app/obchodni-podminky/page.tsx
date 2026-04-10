@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: "Obchodní podmínky | Depozitka",
     description:
       "Pravidla používání služby Depozitka pro kupující, prodávající i provozovatele.",
-    url: "https://depozitka.eu/obchodni-podminky",
+    url: "https://www.depozitka.eu/obchodni-podminky",
     type: "article",
     images: ["/brand/logo-gold.png"],
   },

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "Depozitka — Bezpečná platba pro každý online obchod",
     description:
       "Peníze držíme my, dokud nedostaneš zboží. Ochrana proti podvodům pro bazary, marketplace i nezávislé prodejce.",
-    url: "https://depozitka.eu",
+    url: "https://www.depozitka.eu",
     type: "website",
     images: ["/brand/logo-gold.png"],
   },

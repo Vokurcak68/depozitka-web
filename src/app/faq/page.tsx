@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     title: "FAQ | Depozitka",
     description:
       "Nejčastější dotazy k bezpečné platbě přes Depozitku: platby, spory, provize i integrace.",
-    url: "https://depozitka.eu/faq",
+    url: "https://www.depozitka.eu/faq",
     type: "article",
     images: ["/brand/logo-gold.png"],
   },

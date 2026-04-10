@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Depozitka pro marketplace | API a webhooky",
     description:
       "Integrujte bezpečnou úschovu plateb do svého bazaru přes REST API. Rychlé nasazení a nižší riziko podvodů.",
-    url: "https://depozitka.eu/pro-provozovatele",
+    url: "https://www.depozitka.eu/pro-provozovatele",
     type: "website",
     images: ["/brand/logo-gold.png"],
   },

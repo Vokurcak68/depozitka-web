@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "Bezpečnost | Depozitka",
     description:
       "Bezpečnostní principy Depozitky: šifrování, ochrana dat a transparentní řešení sporů.",
-    url: "https://depozitka.eu/bezpecnost",
+    url: "https://www.depozitka.eu/bezpecnost",
     type: "website",
     images: ["/brand/logo-gold.png"],
   },

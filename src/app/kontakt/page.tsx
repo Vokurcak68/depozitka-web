@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "Kontakt | Depozitka",
     description:
       "Podpora, technická integrace i právní dotazy. Napište nám na info@depozitka.eu.",
-    url: "https://depozitka.eu/kontakt",
+    url: "https://www.depozitka.eu/kontakt",
     type: "website",
     images: ["/brand/logo-gold.png"],
   },

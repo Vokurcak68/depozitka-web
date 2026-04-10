@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: "Jak to funguje | Depozitka",
     description:
       "5 kroků bezpečné transakce: platba do úschovy, tracking, potvrzení doručení a výplata prodávajícímu.",
-    url: "https://depozitka.eu/jak-to-funguje",
+    url: "https://www.depozitka.eu/jak-to-funguje",
     type: "article",
     images: ["/brand/logo-gold.png"],
   },

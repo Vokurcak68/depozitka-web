@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: "Ochrana osobních údajů | Depozitka",
     description:
       "Jak Depozitka zpracovává osobní údaje v souladu s GDPR.",
-    url: "https://depozitka.eu/ochrana-udaju",
+    url: "https://www.depozitka.eu/ochrana-udaju",
     type: "article",
     images: ["/brand/logo-gold.png"],
   },
