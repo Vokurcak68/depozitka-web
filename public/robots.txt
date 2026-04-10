@@ -3,3 +3,4 @@ Allow: /
 
 Host: https://www.depozitka.eu
 Sitemap: https://www.depozitka.eu/sitemap.xml
+Sitemap: https://www.depozitka.eu/sitemap-main.xml
