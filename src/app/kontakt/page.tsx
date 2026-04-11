@@ -185,12 +185,14 @@ export default function KontaktPage() {
             Technické incidenty a výpadky řešíme 24/7 přes automatický
             monitoring. Stav služby najdete na{" "}
             <Link
-              href="/"
+              href="https://stats.uptimerobot.com/thSpWMVyHt"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-navy-700 underline underline-offset-4 hover:text-gold-600"
             >
               status.depozitka.eu
-            </Link>{" "}
-            (připravujeme).
+            </Link>
+            .
           </p>
         </div>
       </Section>
