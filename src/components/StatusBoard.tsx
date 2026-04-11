@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Overall = "operational" | "degraded" | "major_outage";
-type TargetStatus = "operational" | "degraded" | "incident";
+type Overall = "operational" | "degraded" | "major_outage" | "unknown";
+type TargetStatus = "operational" | "degraded" | "incident" | "unknown";
 
 interface MonitorTarget {
   code: string;
@@ -37,12 +37,14 @@ const API_URL = "https://depozitka-engine.vercel.app/api/monitor/status";
 function badgeClass(status: TargetStatus) {
   if (status === "operational") return "bg-emerald-100 text-emerald-800";
   if (status === "degraded") return "bg-amber-100 text-amber-800";
+  if (status === "unknown") return "bg-slate-100 text-slate-700";
   return "bg-red-100 text-red-800";
 }
 
 function overallText(status: Overall): string {
   if (status === "operational") return "Všechny služby jsou v pořádku";
   if (status === "degraded") return "Část služeb je omezená";
+  if (status === "unknown") return "Čekáme na první měření";
   return "Aktivní incident";
 }
 
@@ -120,7 +122,9 @@ export default function StatusBoard() {
                     ? "bg-emerald-100 text-emerald-800"
                     : data.overall === "degraded"
                       ? "bg-amber-100 text-amber-800"
-                      : "bg-red-100 text-red-800"
+                      : data.overall === "unknown"
+                        ? "bg-slate-100 text-slate-700"
+                        : "bg-red-100 text-red-800"
                 }`}
               >
                 {overallText(data.overall)}
@@ -149,13 +153,15 @@ export default function StatusBoard() {
                       ? "Operational"
                       : target.status === "degraded"
                         ? "Degraded"
-                        : "Incident"}
+                        : target.status === "unknown"
+                          ? "Pending"
+                          : "Incident"}
                   </span>
                 </div>
 
                 <div className="mt-4 grid gap-2 text-sm text-navy-600">
                   <div>Poslední kontrola: {formatDate(target.lastCheck?.checked_at)}</div>
-                  <div>HTTP status: {target.lastCheck?.status_code ?? "ERR"}</div>
+                  <div>HTTP status: {target.lastCheck ? target.lastCheck.status_code ?? "ERR" : "čeká na první měření"}</div>
                   <div>Odezva: {target.lastCheck?.response_ms ?? "—"} ms</div>
                   {target.openIncident && (
                     <div className="text-red-700 font-medium">
