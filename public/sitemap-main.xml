@@ -54,4 +54,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
+  <url>
+    <loc>https://www.depozitka.eu/status</loc>
+    <lastmod>2026-04-11T20:56:00+00:00</lastmod>
+    <changefreq>always</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>
