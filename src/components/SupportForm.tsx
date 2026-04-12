@@ -140,6 +140,13 @@ export default function SupportForm() {
       }
 
       setResult({ ticketCode });
+
+      // UX: scroll to top so the success box is visible immediately
+      try {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch {
+        // ignore
+      }
     } catch (e: any) {
       setError(e?.message || "ERROR");
     } finally {
