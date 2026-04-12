@@ -245,7 +245,7 @@ export default function SupportForm() {
                 const list = Array.from(e.target.files || []);
                 setFiles((prev) => [...prev, ...list.map((file) => ({ file, state: "queued" as const }))]);
               }}
-              className="mt-2"
+              className="mt-2 block w-full cursor-pointer text-sm text-navy-700 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:font-semibold file:text-navy-900 hover:file:bg-gold-300"
             />
             {files.length > 0 && (
               <ul className="mt-3 space-y-2 text-sm">
