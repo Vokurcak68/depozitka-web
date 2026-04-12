@@ -14,6 +14,14 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  // On status subdomain we show status board as a standalone page (no global nav).
+  if (typeof window !== "undefined") {
+    const host = window.location.host.toLowerCase();
+    if (host === "status.depozitka.eu" || host.startsWith("status.depozitka.eu:")) {
+      return null;
+    }
+  }
+
   const [open, setOpen] = useState(false);
 
   return (
