@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import StatusBoard from "@/components/StatusBoard";
+import CloseTabButton from "@/components/CloseTabButton";
 
 export const metadata: Metadata = {
   title: "Status služeb",
@@ -24,7 +25,8 @@ export const metadata: Metadata = {
 
 export default function StatusPage() {
   return (
-    <section className="bg-navy-50 min-h-[70vh]">
+    <section className="bg-navy-50 min-h-[70vh] relative">
+      <CloseTabButton fallbackUrl="https://www.depozitka.eu" />
       <StatusBoard />
     </section>
   );
