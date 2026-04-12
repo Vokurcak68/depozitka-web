@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import TurnstileWidget from "@/components/TurnstileWidget";
 
 const ENGINE_BASE = "https://engine.depozitka.eu";
@@ -34,6 +34,17 @@ export default function SupportForm() {
   const [transactionRef, setTransactionRef] = useState("");
 
   const [files, setFiles] = useState<Uploading[]>([]);
+  const [inAppBrowser, setInAppBrowser] = useState(false);
+
+  useEffect(() => {
+    try {
+      const ua = navigator.userAgent || "";
+      // Common embedded browsers that often block <input type="file">.
+      setInAppBrowser(/Telegram|FBAN|FBAV|Instagram|Line\//i.test(ua));
+    } catch {
+      setInAppBrowser(false);
+    }
+  }, []);
 
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ ticketCode: string } | null>(null);
@@ -221,6 +232,12 @@ export default function SupportForm() {
 
           <div className="mt-6">
             <div className="text-sm font-semibold text-navy-800">Přílohy</div>
+            {inAppBrowser && (
+              <div className="mt-2 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                Pozor: v in-app prohlížeči (Telegram/Instagram/Facebook…) často nejde nahrávat soubory.
+                Otevři stránku v Safari/Chrome a zkus to znovu.
+              </div>
+            )}
             <input
               type="file"
               multiple
