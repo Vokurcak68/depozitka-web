@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -63,11 +64,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const h = await headers();
+  const host = (h.get("host") || "").toLowerCase();
+  const isStatusHost = host === "status.depozitka.eu" || host.startsWith("status.depozitka.eu:") || host === "www.status.depozitka.eu";
+
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -102,9 +107,9 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
-        <Navbar />
+        {!isStatusHost && <Navbar />}
         <main className="min-h-screen">{children}</main>
-        <Footer />
+        {!isStatusHost && <Footer />}
       </body>
     </html>
   );
