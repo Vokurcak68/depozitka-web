@@ -71,12 +71,41 @@ export default function KontaktPage() {
         </div>
       </section>
 
+      {/* SUPPORT CTA */}
+      <Section bg="white">
+        <SectionHeader eyebrow="Podpora" title="Nahlásit problém" />
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-navy-50 rounded-2xl p-8 border border-navy-100">
+            <h3 className="text-xl font-bold text-navy-900">Ticketovací systém</h3>
+            <p className="mt-2 text-navy-600">
+              Pro nahlášení problému použij ticket — dostaneš ID a můžeš přiložit screenshoty/logy.
+            </p>
+            <div className="mt-5 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/podpora"
+                className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-gold-400 text-navy-900 font-semibold hover:bg-gold-500 transition-colors"
+              >
+                Nahlásit problém
+              </Link>
+              <Link
+                href="https://status.depozitka.eu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white border border-navy-200 text-navy-800 font-semibold hover:border-gold-400 transition-colors"
+              >
+                Status služby
+              </Link>
+            </div>
+            <p className="mt-4 text-xs text-navy-500">
+              Pro obchodní / právní dotazy můžeš pořád použít emaily níže.
+            </p>
+          </div>
+        </div>
+      </Section>
+
       {/* DEPARTMENTS */}
       <Section bg="white">
-        <SectionHeader
-          eyebrow="Napište nám"
-          title="Vyberte si oddělení"
-        />
+        <SectionHeader eyebrow="Email" title="Další kontakty" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {departments.map((d) => (
             <a
@@ -87,12 +116,8 @@ export default function KontaktPage() {
               <div className="h-12 w-12 rounded-xl bg-gold-400 flex items-center justify-center mb-5">
                 <d.icon className="h-7 w-7 text-navy-900" />
               </div>
-              <h3 className="text-xl font-bold text-navy-900 mb-2">
-                {d.title}
-              </h3>
-              <p className="text-navy-600 leading-relaxed mb-4 text-sm">
-                {d.desc}
-              </p>
+              <h3 className="text-xl font-bold text-navy-900 mb-2">{d.title}</h3>
+              <p className="text-navy-600 leading-relaxed mb-4 text-sm">{d.desc}</p>
               <span className="mt-auto font-mono text-sm font-semibold text-navy-900 group-hover:text-gold-600 transition">
                 {d.email} →
               </span>
