@@ -21,16 +21,22 @@ export default function BezpecnaPlatbaNovyPage() {
 
   const [initiatorRole, setInitiatorRole] = useState<"buyer" | "seller">("buyer");
   const [initiatorName, setInitiatorName] = useState<string>("");
-  void initiatorName; // V2: can be used for nicer emails / display
   const [initiatorEmail, setInitiatorEmail] = useState<string>("");
 
   const [counterpartyName, setCounterpartyName] = useState<string>("");
-  void counterpartyName; // V2: optional
   const [counterpartyEmail, setCounterpartyEmail] = useState<string>("");
 
   const [amountCzk, setAmountCzk] = useState<string>("");
+
+  const [deliveryMethod, setDeliveryMethod] = useState<"personal" | "carrier">("carrier");
+  const [shippingTerms, setShippingTerms] = useState<
+    "buyer_pays" | "seller_pays" | "included" | "split" | "other"
+  >("buyer_pays");
   const [shippingCarrier, setShippingCarrier] = useState<string>("Zásilkovna");
-  void shippingCarrier; // V2: will be stored in deal metadata
+  const [shippingNote, setShippingNote] = useState<string>("");
+  const [estimatedShipDate, setEstimatedShipDate] = useState<string>("");
+
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const [subject, setSubject] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -49,7 +55,9 @@ export default function BezpecnaPlatbaNovyPage() {
       subject.trim().length > 0 &&
       Number.isFinite(amt) &&
       amt > 0 &&
-      shippingCarrier.trim().length > 0
+      !!deliveryMethod &&
+      (deliveryMethod === "personal" || shippingCarrier.trim().length > 0) &&
+      termsAccepted
     );
   }, [
     turnstileToken,
@@ -58,7 +66,9 @@ export default function BezpecnaPlatbaNovyPage() {
     counterpartyEmail,
     subject,
     amountCzk,
+    deliveryMethod,
     shippingCarrier,
+    termsAccepted,
   ]);
 
   async function onSubmit(e: React.FormEvent) {
@@ -79,11 +89,19 @@ export default function BezpecnaPlatbaNovyPage() {
           turnstileToken,
           initiatorRole,
           initiatorEmail,
+          initiatorName,
           counterpartyEmail,
+          counterpartyName,
           title: subject,
           description: message,
           totalAmountCzk: Number(amountCzk),
-          // TODO (V2): phone, externalUrl/snapshot, attachments snapshot
+          deliveryMethod,
+          shippingTerms,
+          shippingCarrier: deliveryMethod === "carrier" ? shippingCarrier : null,
+          shippingNote: shippingNote || null,
+          estimatedShipDate: estimatedShipDate || null,
+          termsAccepted,
+          termsVersion: "v1",
         }),
       });
 
@@ -237,39 +255,68 @@ export default function BezpecnaPlatbaNovyPage() {
             />
           </label>
 
-          <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Jméno protistrany (volitelné)</div>
-            <input
-              value={counterpartyName}
-              onChange={(e) => setCounterpartyName(e.target.value)}
+          <label className="block sm:col-span-2">
+            <div className="text-sm font-semibold text-navy-800 mb-1">Typ předání</div>
+            <select
+              value={deliveryMethod}
+              onChange={(e) => setDeliveryMethod(e.target.value as any)}
               className="w-full rounded-lg border border-navy-200 px-3 py-2"
-              placeholder="Petr Svoboda"
-            />
+            >
+              <option value="personal">Osobně</option>
+              <option value="carrier">Dopravce</option>
+            </select>
           </label>
 
-          <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Email protistrany</div>
-            <input
-              value={counterpartyEmail}
-              onChange={(e) => setCounterpartyEmail(e.target.value)}
+          <label className="block sm:col-span-2">
+            <div className="text-sm font-semibold text-navy-800 mb-1">Doprava</div>
+            <select
+              value={shippingTerms}
+              onChange={(e) => setShippingTerms(e.target.value as any)}
               className="w-full rounded-lg border border-navy-200 px-3 py-2"
-              placeholder="petr@domena.cz"
+            >
+              <option value="buyer_pays">Platí kupující (navíc)</option>
+              <option value="seller_pays">Platí prodávající</option>
+              <option value="included">Doprava je v ceně</option>
+              <option value="split">Dělíme se</option>
+              <option value="other">Jinak / domluvou</option>
+            </select>
+          </label>
+
+          {deliveryMethod === "carrier" && (
+            <label className="block sm:col-span-2">
+              <div className="text-sm font-semibold text-navy-800 mb-1">Dopravce</div>
+              <select
+                value={shippingCarrier}
+                onChange={(e) => setShippingCarrier(e.target.value)}
+                className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              >
+                <option>Zásilkovna</option>
+                <option>PPL</option>
+                <option>DPD</option>
+                <option>GLS</option>
+                <option>Česká pošta</option>
+              </select>
+            </label>
+          )}
+
+          <label className="block sm:col-span-2">
+            <div className="text-sm font-semibold text-navy-800 mb-1">Poznámka k dopravě (volitelné)</div>
+            <input
+              value={shippingNote}
+              onChange={(e) => setShippingNote(e.target.value)}
+              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              placeholder="např. Zásilkovna na výdejní místo / osobní předání Praha"
             />
           </label>
 
           <label className="block sm:col-span-2">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Dopravce</div>
-            <select
-              value={shippingCarrier}
-              onChange={(e) => setShippingCarrier(e.target.value)}
+            <div className="text-sm font-semibold text-navy-800 mb-1">Odhad odeslání (volitelné)</div>
+            <input
+              value={estimatedShipDate}
+              onChange={(e) => setEstimatedShipDate(e.target.value)}
               className="w-full rounded-lg border border-navy-200 px-3 py-2"
-            >
-              <option>Zásilkovna</option>
-              <option>PPL</option>
-              <option>DPD</option>
-              <option>GLS</option>
-              <option>Česká pošta</option>
-            </select>
+              placeholder="YYYY-MM-DD"
+            />
           </label>
 
           <label className="block sm:col-span-2">
@@ -294,10 +341,28 @@ export default function BezpecnaPlatbaNovyPage() {
         </div>
 
         <div className="mt-6">
+          <div className="text-sm font-semibold text-navy-800 mb-2">Souhlas</div>
+          <label className="flex items-start gap-3 rounded-2xl border border-navy-100 bg-white p-4">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+              className="mt-1"
+            />
+            <div className="text-sm text-navy-800">
+              Souhlasím s podmínkami služby Depozitka.
+              <div className="mt-1 text-xs text-navy-500">
+                (MVP: link na podmínky doplníme; ukládáme čas souhlasu.)
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div className="mt-6">
           <div className="text-sm font-semibold text-navy-800 mb-2">Ověření (anti-spam)</div>
           <TurnstileWidget
             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
-            action="direct_deal_create"
+            action="deals_create"
             onToken={setTurnstileToken}
             resetKey={turnstileReset}
           />
