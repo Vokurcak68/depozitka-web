@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import TurnstileWidget from "@/components/TurnstileWidget";
 
-const ENGINE_BASE = "https://engine.depozitka.eu";
+const ENGINE_BASE = process.env.NEXT_PUBLIC_ENGINE_BASE || "https://engine.depozitka.eu";
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
 type Category = "incident" | "payment" | "integration" | "legal" | "other";

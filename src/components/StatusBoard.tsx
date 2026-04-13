@@ -32,7 +32,7 @@ interface MonitorPayload {
   targets: MonitorTarget[];
 }
 
-const API_URL = "https://engine.depozitka.eu/api/monitor/status";
+const API_URL = `${process.env.NEXT_PUBLIC_ENGINE_BASE || "https://engine.depozitka.eu"}/api/monitor/status`;
 
 function badgeClass(status: TargetStatus) {
   if (status === "operational") return "bg-emerald-100 text-emerald-800";
