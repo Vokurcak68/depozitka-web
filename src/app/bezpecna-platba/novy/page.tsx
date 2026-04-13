@@ -9,7 +9,7 @@ import Button from "@/components/Button";
 const ENGINE_BASE = process.env.NEXT_PUBLIC_ENGINE_BASE || "https://engine.depozitka.eu";
 
 type CreateDealResponse =
-  | { ok: true; dealToken: string }
+  | { ok: true; dealToken: string; editToken?: string; inviteSent?: boolean }
   | { ok: false; error: string };
 
 export default function BezpecnaPlatbaNovyPage() {
@@ -33,6 +33,7 @@ export default function BezpecnaPlatbaNovyPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<{ dealToken: string; inviteSent?: boolean } | null>(null);
 
   const canSubmit = useMemo(() => {
     const amt = Number(amountCzk);
@@ -104,7 +105,8 @@ export default function BezpecnaPlatbaNovyPage() {
         return;
       }
 
-      router.push(`/bezpecna-platba/deal/${json.dealToken}`);
+      // Show post-create screen for initiator (counterparty gets email link).
+      setSuccess({ dealToken: json.dealToken, inviteSent: (json as any).inviteSent });
     } catch (err: any) {
       setError(err?.message || "Interní chyba");
       setTurnstileToken("");
@@ -112,6 +114,70 @@ export default function BezpecnaPlatbaNovyPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  const dealLink = success ? `${typeof window !== "undefined" ? window.location.origin : ""}/bezpecna-platba/deal/${success.dealToken}` : "";
+
+  if (success) {
+    return (
+      <Section bg="white">
+        <SectionHeader
+          eyebrow="Bezpečná platba"
+          title="Pozvánka odeslaná"
+          subtitle="Protistraně přijde email s odkazem. Bez OTP nabídku nepotvrdí."
+        />
+
+        <div className="max-w-2xl">
+          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-900">
+            {success.inviteSent === false
+              ? "Nabídka je vytvořená, ale email se nepodařilo odeslat. Zkopíruj link a pošli ho protistraně ručně."
+              : "Email s pozvánkou je odeslaný. Čekáme na potvrzení protistrany."}
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-navy-100 bg-white p-5">
+            <div className="text-sm font-semibold text-navy-900">Odkaz na nabídku</div>
+            <div className="mt-2 flex flex-col sm:flex-row gap-3">
+              <input
+                readOnly
+                value={dealLink}
+                className="w-full rounded-lg border border-navy-200 px-3 py-2 text-sm"
+              />
+              <Button
+                variant="secondary"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(dealLink);
+                  } catch {
+                    // ignore
+                  }
+                }}
+              >
+                Zkopírovat
+              </Button>
+            </div>
+            <div className="mt-2 text-xs text-navy-500">
+              Tenhle link slouží protistraně k vyžádání OTP a potvrzení/odmítnutí.
+            </div>
+          </div>
+
+          <div className="mt-6 flex gap-3">
+            <Button href={`/bezpecna-platba/deal/${success.dealToken}`} variant="outlineDark">
+              Otevřít nabídku
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                setSuccess(null);
+                setTurnstileToken("");
+                setTurnstileReset((n) => n + 1);
+              }}
+            >
+              Vytvořit další
+            </Button>
+          </div>
+        </div>
+      </Section>
+    );
   }
 
   return (
