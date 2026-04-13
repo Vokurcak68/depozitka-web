@@ -1,26 +1,38 @@
 import Link from "next/link";
 import { ReactNode } from "react";
 
-type Variant = "primary" | "secondary" | "ghost" | "outline";
+type Variant = "primary" | "secondary" | "ghost" | "outline" | "outlineDark";
 type Size = "sm" | "md" | "lg";
 
-interface ButtonProps {
-  href: string;
+type CommonProps = {
   children: ReactNode;
   variant?: Variant;
   size?: Size;
   className?: string;
+};
+
+type LinkProps = CommonProps & {
+  href: string;
   external?: boolean;
-}
+};
+
+type ButtonOnlyProps = CommonProps & {
+  href?: never;
+  onClick?: () => void | Promise<void>;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+};
+
+type ButtonProps = LinkProps | ButtonOnlyProps;
 
 const variantClasses: Record<Variant, string> = {
-  primary:
-    "bg-gold-400 text-navy-900 hover:bg-gold-500 shadow-md hover:shadow-lg",
-  secondary:
-    "bg-navy-700 text-white hover:bg-navy-800 shadow-md hover:shadow-lg",
+  primary: "bg-gold-400 text-navy-900 hover:bg-gold-500 shadow-md hover:shadow-lg",
+  secondary: "bg-navy-700 text-white hover:bg-navy-800 shadow-md hover:shadow-lg",
   ghost: "text-navy-700 hover:text-gold-500 hover:bg-navy-50",
-  outline:
-    "border-2 border-white text-white hover:bg-white hover:text-navy-700",
+  // For use on dark backgrounds (hero sections)
+  outline: "border-2 border-white text-white hover:bg-white hover:text-navy-700",
+  // For use on light backgrounds
+  outlineDark: "border-2 border-navy-200 text-navy-800 hover:border-gold-500 hover:text-gold-600 hover:bg-navy-50",
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -29,27 +41,41 @@ const sizeClasses: Record<Size, string> = {
   lg: "px-8 py-4 text-lg",
 };
 
-export default function Button({
-  href,
-  children,
-  variant = "primary",
-  size = "md",
-  className = "",
-  external = false,
-}: ButtonProps) {
+export default function Button(props: ButtonProps) {
+  const {
+    children,
+    variant = "primary",
+    size = "md",
+    className = "",
+  } = props;
+
   const classes = `inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-200 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 
-  if (external) {
+  // Link mode
+  if ("href" in props) {
+    const { href, external = false } = props as LinkProps;
+
+    if (external) {
+      return (
+        <a href={href} className={classes} target="_blank" rel="noopener noreferrer">
+          {children}
+        </a>
+      );
+    }
+
     return (
-      <a href={href} className={classes} target="_blank" rel="noopener noreferrer">
+      <Link href={href} className={classes}>
         {children}
-      </a>
+      </Link>
     );
   }
 
+  // Button mode
+  const { onClick, type = "button", disabled = false } = props as ButtonOnlyProps;
+
   return (
-    <Link href={href} className={classes}>
+    <button type={type} className={classes} onClick={onClick} disabled={disabled}>
       {children}
-    </Link>
+    </button>
   );
 }
