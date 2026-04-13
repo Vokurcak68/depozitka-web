@@ -24,6 +24,7 @@ type Uploading = {
 
 export default function SupportForm() {
   const [turnstileToken, setTurnstileToken] = useState<string>("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -149,6 +150,8 @@ export default function SupportForm() {
       }
     } catch (e: any) {
       setError(e?.message || "ERROR");
+      setTurnstileToken("");
+      setTurnstileReset((n) => n + 1);
     } finally {
       setSubmitting(false);
     }
@@ -280,6 +283,7 @@ export default function SupportForm() {
                 siteKey={TURNSTILE_SITE_KEY}
                 action="support_create"
                 onToken={(t) => setTurnstileToken(t)}
+                resetKey={turnstileReset}
               />
             ) : (
               <div className="text-sm text-red-600">

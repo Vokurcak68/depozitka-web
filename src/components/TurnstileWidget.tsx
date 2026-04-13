@@ -12,6 +12,8 @@ declare global {
           sitekey: string;
           action?: string;
           callback: (token: string) => void;
+          "expired-callback"?: () => void;
+          "error-callback"?: () => void;
         }
       ) => string;
       reset: (widgetId?: string) => void;
@@ -23,10 +25,12 @@ export default function TurnstileWidget({
   siteKey,
   action,
   onToken,
+  resetKey = 0,
 }: {
   siteKey: string;
   action: string;
   onToken: (token: string) => void;
+  resetKey?: number;
 }) {
   const id = useId();
 
@@ -37,6 +41,18 @@ export default function TurnstileWidget({
   useEffect(() => {
     onTokenRef.current = onToken;
   }, [onToken]);
+
+  useEffect(() => {
+    // allow parent to force-reset (Turnstile tokens are single-use)
+    try {
+      if (widgetIdRef.current && window.turnstile) {
+        window.turnstile.reset(widgetIdRef.current);
+      }
+    } catch {
+      // ignore
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetKey]);
 
   useEffect(() => {
     const el = document.getElementById(id);
@@ -54,6 +70,8 @@ export default function TurnstileWidget({
           sitekey: siteKey,
           action,
           callback: (token) => onTokenRef.current(token),
+          "expired-callback": () => onTokenRef.current(""),
+          "error-callback": () => onTokenRef.current(""),
         });
 
         widgetIdRef.current = wid;

@@ -16,6 +16,7 @@ export default function BezpecnaPlatbaNovyPage() {
   const router = useRouter();
 
   const [turnstileToken, setTurnstileToken] = useState<string>("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
 
   const [initiatorRole, setInitiatorRole] = useState<"buyer" | "seller">("buyer");
   const [initiatorName, setInitiatorName] = useState<string>("");
@@ -85,13 +86,20 @@ export default function BezpecnaPlatbaNovyPage() {
 
       const json = (await res.json()) as CreateDealResponse;
       if (!res.ok || !json.ok) {
-        setError((json as any)?.error || "Nepodařilo se vytvořit nabídku");
+        const details = (json as any)?.details?.codes?.join(", ");
+        setError(
+          `${(json as any)?.error || "Nepodařilo se vytvořit nabídku"}${details ? ` (${details})` : ""}. Zkus prosím Turnstile ověřit znovu.`
+        );
+        setTurnstileToken("");
+        setTurnstileReset((n) => n + 1);
         return;
       }
 
       router.push(`/bezpecna-platba/deal/${json.dealToken}`);
     } catch (err: any) {
       setError(err?.message || "Interní chyba");
+      setTurnstileToken("");
+      setTurnstileReset((n) => n + 1);
     } finally {
       setLoading(false);
     }
@@ -212,6 +220,7 @@ export default function BezpecnaPlatbaNovyPage() {
             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
             action="direct_deal_create"
             onToken={setTurnstileToken}
+            resetKey={turnstileReset}
           />
           {!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
             <div className="mt-2 text-sm text-red-600">
