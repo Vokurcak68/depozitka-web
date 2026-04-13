@@ -86,9 +86,18 @@ export default function BezpecnaPlatbaNovyPage() {
 
       const json = (await res.json()) as CreateDealResponse;
       if (!res.ok || !json.ok) {
-        const details = (json as any)?.details?.codes?.join(", ");
+        const d: any = (json as any)?.details;
+
+        const detailsText = Array.isArray(d)
+          ? d.join(", ")
+          : (d?.codes && Array.isArray(d.codes) && d.codes.length > 0)
+            ? d.codes.join(", ")
+            : d
+              ? JSON.stringify(d)
+              : "";
+
         setError(
-          `${(json as any)?.error || "Nepodařilo se vytvořit nabídku"}${details ? ` (${details})` : ""}. Zkus prosím Turnstile ověřit znovu.`
+          `${(json as any)?.error || "Nepodařilo se vytvořit nabídku"}${detailsText ? ` (${detailsText})` : ""}. Zkus prosím Turnstile ověřit znovu.`
         );
         setTurnstileToken("");
         setTurnstileReset((n) => n + 1);
