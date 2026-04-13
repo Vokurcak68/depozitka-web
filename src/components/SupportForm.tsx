@@ -301,10 +301,10 @@ export default function SupportForm() {
               onClick={submit}
               className="px-4 py-2 rounded-lg bg-gold-400 text-navy-900 font-semibold disabled:opacity-50"
             >
-              {submitting ? "Odesílám…" : "Vytvořit ticket"}
+              {submitting ? "Odesílám…" : "Odeslat zprávu"}
             </button>
             <div className="text-xs text-navy-500">
-              Po odeslání dostaneš ID ticketu. (Proti spamu chráněno Turnstile.)
+              Po odeslání dostaneš ID zprávy a my se ozveme. (Proti spamu chráněno Turnstile.)
             </div>
           </div>
         </>
