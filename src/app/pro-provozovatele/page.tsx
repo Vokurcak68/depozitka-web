@@ -295,7 +295,7 @@ export default function ProProvozovatelePage() {
             integrace a orientačními podmínkami do 24 hodin.
           </p>
           <Button href="/kontakt" variant="primary" size="lg">
-            Napsat nám <ArrowRight className="h-5 w-5" />
+            Napište nám <ArrowRight className="h-5 w-5" />
           </Button>
         </div>
       </Section>

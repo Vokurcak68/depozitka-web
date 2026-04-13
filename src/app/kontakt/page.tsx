@@ -72,8 +72,8 @@ export default function KontaktPage() {
       </section>
 
       {/* SUPPORT CTA */}
-      <Section bg="white">
-        <SectionHeader eyebrow="Podpora" title="Napsat nám" />
+      <Section bg="white" className="pb-8 sm:pb-10">
+        <SectionHeader eyebrow="Podpora" title="Napište nám" />
         <div className="max-w-3xl mx-auto">
           <div className="bg-navy-50 rounded-2xl p-8 border border-navy-100">
             <h3 className="text-xl font-bold text-navy-900">Rychlá zpráva pro náš tým</h3>
@@ -85,7 +85,7 @@ export default function KontaktPage() {
                 href="/podpora"
                 className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-gold-400 text-navy-900 font-semibold hover:bg-gold-500 transition-colors"
               >
-                Napsat nám
+                Napište nám
               </Link>
               <Link
                 href="https://status.depozitka.eu"
@@ -104,7 +104,7 @@ export default function KontaktPage() {
       </Section>
 
       {/* DEPARTMENTS */}
-      <Section bg="white">
+      <Section bg="white" className="pt-8 sm:pt-10">
         <SectionHeader eyebrow="Email" title="Další kontakty" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {departments.map((d) => (

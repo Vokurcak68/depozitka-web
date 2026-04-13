@@ -301,7 +301,7 @@ Bezpečná platba pro český online trh
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button href="/kontakt" variant="secondary" size="lg">
-              Napsat nám
+              Napište nám
             </Button>
             <Button href="/faq" variant="ghost" size="lg">
               Časté otázky

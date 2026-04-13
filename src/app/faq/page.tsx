@@ -213,7 +213,7 @@ export default function FaqPage() {
             pracovní dny.
           </p>
           <Button href="/kontakt" variant="secondary" size="lg">
-            Napsat nám <ArrowRight className="h-5 w-5" />
+            Napište nám <ArrowRight className="h-5 w-5" />
           </Button>
         </div>
       </Section>
