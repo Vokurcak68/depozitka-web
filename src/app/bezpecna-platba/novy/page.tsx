@@ -9,31 +9,35 @@ import Button from "@/components/Button";
 const ENGINE_BASE = process.env.NEXT_PUBLIC_ENGINE_BASE || "https://engine.depozitka.eu";
 
 type CreateDealResponse =
-  | { ok: true; dealToken: string; editToken?: string; inviteSent?: boolean }
-  | { ok: false; error: string };
+  | { ok: true; dealId: string; viewToken: string; status: string; inviteSent?: boolean }
+  | { ok: false; error: string; details?: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export default function BezpecnaPlatbaNovyPage() {
   const router = useRouter();
+  void router; // no-op (kept for future redirects)
 
   const [turnstileToken, setTurnstileToken] = useState<string>("");
   const [turnstileReset, setTurnstileReset] = useState(0);
 
   const [initiatorRole, setInitiatorRole] = useState<"buyer" | "seller">("buyer");
   const [initiatorName, setInitiatorName] = useState<string>("");
+  void initiatorName; // V2: can be used for nicer emails / display
   const [initiatorEmail, setInitiatorEmail] = useState<string>("");
 
   const [counterpartyName, setCounterpartyName] = useState<string>("");
+  void counterpartyName; // V2: optional
   const [counterpartyEmail, setCounterpartyEmail] = useState<string>("");
 
   const [amountCzk, setAmountCzk] = useState<string>("");
   const [shippingCarrier, setShippingCarrier] = useState<string>("Zásilkovna");
+  void shippingCarrier; // V2: will be stored in deal metadata
 
   const [subject, setSubject] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<{ dealToken: string; inviteSent?: boolean } | null>(null);
+  const [success, setSuccess] = useState<{ dealId: string; viewToken: string; inviteSent?: boolean } | null>(null);
 
   const canSubmit = useMemo(() => {
     const amt = Number(amountCzk);
@@ -68,20 +72,18 @@ export default function BezpecnaPlatbaNovyPage() {
 
     setLoading(true);
     try {
-      const res = await fetch(`${ENGINE_BASE}/api/direct-deals/create`, {
+      const res = await fetch(`${ENGINE_BASE}/api/deals/create`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           turnstileToken,
           initiatorRole,
-          initiatorName,
           initiatorEmail,
-          counterpartyName,
           counterpartyEmail,
-          amountCzk: Number(amountCzk),
-          shippingCarrier,
-          subject,
-          message,
+          title: subject,
+          description: message,
+          totalAmountCzk: Number(amountCzk),
+          // TODO (V2): phone, externalUrl/snapshot, attachments snapshot
         }),
       });
 
@@ -106,7 +108,7 @@ export default function BezpecnaPlatbaNovyPage() {
       }
 
       // Show post-create screen for initiator (counterparty gets email link).
-      setSuccess({ dealToken: json.dealToken, inviteSent: (json as any).inviteSent });
+      setSuccess({ dealId: json.dealId, viewToken: json.viewToken, inviteSent: (json as any).inviteSent });
     } catch (err: any) {
       setError(err?.message || "Interní chyba");
       setTurnstileToken("");
@@ -116,7 +118,9 @@ export default function BezpecnaPlatbaNovyPage() {
     }
   }
 
-  const dealLink = success ? `${typeof window !== "undefined" ? window.location.origin : ""}/bezpecna-platba/deal/${success.dealToken}` : "";
+  const dealLink = success
+    ? `${typeof window !== "undefined" ? window.location.origin : ""}/deal/${success.dealId}?t=${encodeURIComponent(success.viewToken)}`
+    : "";
 
   if (success) {
     return (
@@ -161,7 +165,7 @@ export default function BezpecnaPlatbaNovyPage() {
           </div>
 
           <div className="mt-6 flex gap-3">
-            <Button href={`/bezpecna-platba/deal/${success.dealToken}`} variant="outlineDark">
+            <Button href={`/deal/${success.dealId}?t=${encodeURIComponent(success.viewToken)}`} variant="outlineDark">
               Otevřít nabídku
             </Button>
             <Button
