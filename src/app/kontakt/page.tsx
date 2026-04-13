@@ -76,16 +76,16 @@ export default function KontaktPage() {
         <SectionHeader eyebrow="Podpora" title="Napsat nám" />
         <div className="max-w-3xl mx-auto">
           <div className="bg-navy-50 rounded-2xl p-8 border border-navy-100">
-            <h3 className="text-xl font-bold text-navy-900">Napiš nám přes ticket</h3>
+            <h3 className="text-xl font-bold text-navy-900">Rychlá zpráva pro náš tým</h3>
             <p className="mt-2 text-navy-600">
-              Pro rychlou komunikaci s námi použij ticket — dostaneš ID a můžeš přiložit screenshoty nebo logy.
+              Napiš nám přes krátký formulář — dostaneš ID a můžeš přiložit screenshoty nebo logy.
             </p>
             <div className="mt-5 flex flex-col sm:flex-row gap-3">
               <Link
                 href="/podpora"
                 className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-gold-400 text-navy-900 font-semibold hover:bg-gold-500 transition-colors"
               >
-                Napsat podpoře
+                Napsat nám
               </Link>
               <Link
                 href="https://status.depozitka.eu"
@@ -97,7 +97,7 @@ export default function KontaktPage() {
               </Link>
             </div>
             <p className="mt-4 text-xs text-navy-500">
-              Pro obchodní / právní dotazy můžeš pořád použít emaily níže.
+              Pro obchodní / právní dotazy můžeš použít i emaily níže.
             </p>
           </div>
         </div>
