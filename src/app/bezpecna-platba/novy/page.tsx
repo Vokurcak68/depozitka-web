@@ -41,6 +41,11 @@ export default function BezpecnaPlatbaNovyPage() {
   const [subject, setSubject] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
+  // OG import (level 2)
+  const [externalUrl, setExternalUrl] = useState<string>("");
+  const [importingOg, setImportingOg] = useState(false);
+  const [ogInfo, setOgInfo] = useState<{ title?: string | null; description?: string | null; imageStoragePath?: string | null } | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<{ dealId: string; viewToken: string; inviteSent?: boolean } | null>(null);
@@ -70,6 +75,46 @@ export default function BezpecnaPlatbaNovyPage() {
     shippingCarrier,
     termsAccepted,
   ]);
+
+  async function importOg() {
+    setError("");
+
+    const url = externalUrl.trim();
+    if (!url) {
+      setError("Vlož odkaz.");
+      return;
+    }
+
+    setImportingOg(true);
+    try {
+      const res = await fetch(`${ENGINE_BASE}/api/deals/import-og`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+
+      const json = (await res.json()) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+      if (!res.ok || !json?.ok) {
+        setError(json?.error || "Nepodařilo se stáhnout info z odkazu");
+        return;
+      }
+
+      const snap = json.snapshot || {};
+      setOgInfo({
+        title: snap.title,
+        description: snap.description,
+        imageStoragePath: json.imageStoragePath || null,
+      });
+
+      // Prefill only if user has not typed anything yet
+      if (!subject.trim() && snap.title) setSubject(String(snap.title).slice(0, 180));
+      if (!message.trim() && snap.description) setMessage(String(snap.description).slice(0, 1000));
+    } catch (e: any) {
+      setError(e?.message || "Interní chyba");
+    } finally {
+      setImportingOg(false);
+    }
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -102,6 +147,9 @@ export default function BezpecnaPlatbaNovyPage() {
           estimatedShipDate: estimatedShipDate || null,
           termsAccepted,
           termsVersion: "v1",
+          externalUrl: externalUrl.trim() || null,
+          externalSnapshot: ogInfo ? { og: ogInfo } : null,
+          externalImageStoragePath: ogInfo?.imageStoragePath || null,
         }),
       });
 
@@ -317,6 +365,26 @@ export default function BezpecnaPlatbaNovyPage() {
               className="w-full rounded-lg border border-navy-200 px-3 py-2"
               placeholder="YYYY-MM-DD"
             />
+          </label>
+
+          <label className="block sm:col-span-2">
+            <div className="text-sm font-semibold text-navy-800 mb-1">Odkaz na inzerát (volitelné)</div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                value={externalUrl}
+                onChange={(e) => setExternalUrl(e.target.value)}
+                className="w-full rounded-lg border border-navy-200 px-3 py-2"
+                placeholder="https://..."
+              />
+              <Button type="button" variant="secondary" disabled={importingOg || !externalUrl.trim()} onClick={importOg}>
+                {importingOg ? "Načítám…" : "Stáhnout popis (OG)"}
+              </Button>
+            </div>
+            {ogInfo && (
+              <div className="mt-2 text-xs text-navy-500">
+                Načteno z odkazu (OG). Můžeš to upravit ručně.
+              </div>
+            )}
           </label>
 
           <label className="block sm:col-span-2">
