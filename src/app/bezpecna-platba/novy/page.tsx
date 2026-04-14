@@ -43,10 +43,13 @@ export default function BezpecnaPlatbaNovyPage() {
   const [deliveryMethod, setDeliveryMethod] = useState<"personal" | "carrier">("carrier");
   const [shippingTerms, setShippingTerms] = useState<
     "buyer_pays" | "seller_pays" | "included" | "split" | "other"
-  >("buyer_pays");
-  const [shippingCarrier, setShippingCarrier] = useState<string>("Zásilkovna");
+  >("included");
+  // Carrier + estimated ship date are optional; we hide them in MVP UI.
+  const [shippingCarrier, setShippingCarrier] = useState<string>("");
+  void setShippingCarrier; // kept for future UI
   const [shippingNote, setShippingNote] = useState<string>("");
   const [estimatedShipDate, setEstimatedShipDate] = useState<string>("");
+  void setEstimatedShipDate; // kept for future UI
 
   const [termsAccepted, setTermsAccepted] = useState(false);
 
@@ -73,7 +76,6 @@ export default function BezpecnaPlatbaNovyPage() {
       Number.isFinite(amt) &&
       amt > 0 &&
       !!deliveryMethod &&
-      (deliveryMethod === "personal" || shippingCarrier.trim().length > 0) &&
       termsAccepted
     );
   }, [
@@ -84,7 +86,7 @@ export default function BezpecnaPlatbaNovyPage() {
     subject,
     amountCzk,
     deliveryMethod,
-    shippingCarrier,
+    // shippingCarrier is optional + hidden in MVP
     termsAccepted,
   ]);
 
@@ -154,7 +156,7 @@ export default function BezpecnaPlatbaNovyPage() {
           totalAmountCzk: parseAmountCzk(amountCzk),
           deliveryMethod,
           shippingTerms,
-          shippingCarrier: deliveryMethod === "carrier" ? shippingCarrier : null,
+          shippingCarrier: deliveryMethod === "carrier" ? (shippingCarrier.trim() || null) : null,
           shippingNote: shippingNote || null,
           estimatedShipDate: estimatedShipDate || null,
           termsAccepted,
@@ -270,7 +272,7 @@ export default function BezpecnaPlatbaNovyPage() {
         subtitle="Protistrana může nabídku jen potvrdit nebo odmítnout. Když odmítne, nabídku upravíš a pošleš znovu."
       />
 
-      <form onSubmit={onSubmit} className="max-w-2xl">
+      <form onSubmit={onSubmit} className="max-w-2xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label className="block">
             <div className="text-sm font-semibold text-navy-800 mb-1">Jsi</div>
@@ -285,7 +287,7 @@ export default function BezpecnaPlatbaNovyPage() {
           </label>
 
           <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Cena (Kč) — vč. dopravy</div>
+            <div className="text-sm font-semibold text-navy-800 mb-1">Cena (Kč)</div>
             <input
               inputMode="numeric"
               type="tel"
@@ -372,23 +374,6 @@ export default function BezpecnaPlatbaNovyPage() {
             </select>
           </label>
 
-          {deliveryMethod === "carrier" && (
-            <label className="block sm:col-span-2">
-              <div className="text-sm font-semibold text-navy-800 mb-1">Dopravce</div>
-              <select
-                value={shippingCarrier}
-                onChange={(e) => setShippingCarrier(e.target.value)}
-                className="w-full rounded-lg border border-navy-200 px-3 py-2"
-              >
-                <option>Zásilkovna</option>
-                <option>PPL</option>
-                <option>DPD</option>
-                <option>GLS</option>
-                <option>Česká pošta</option>
-              </select>
-            </label>
-          )}
-
           <label className="block sm:col-span-2">
             <div className="text-sm font-semibold text-navy-800 mb-1">Poznámka k dopravě (volitelné)</div>
             <input
@@ -399,15 +384,6 @@ export default function BezpecnaPlatbaNovyPage() {
             />
           </label>
 
-          <label className="block sm:col-span-2">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Odhad odeslání (volitelné)</div>
-            <input
-              value={estimatedShipDate}
-              onChange={(e) => setEstimatedShipDate(e.target.value)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
-              placeholder="YYYY-MM-DD"
-            />
-          </label>
 
           <label className="block sm:col-span-2">
             <div className="text-sm font-semibold text-navy-800 mb-1">Odkaz na inzerát (volitelné)</div>
