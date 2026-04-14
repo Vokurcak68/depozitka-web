@@ -126,6 +126,14 @@ export default function DealV2Page() {
   }
 
   async function openAttachment(storagePath: string) {
+    // Popup blockers: open the window synchronously on user click
+    let w: Window | null = null;
+    try {
+      w = window.open("about:blank");
+    } catch {
+      w = null;
+    }
+
     setBusy(true);
     setError("");
     try {
@@ -136,15 +144,15 @@ export default function DealV2Page() {
       });
       const json = (await res.json()) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
       if (!res.ok || !json?.ok || !json?.signedUrl) {
+        if (w) w.close();
         setError(json?.error || "Nepodařilo se otevřít soubor");
         return;
       }
 
-      // Mobile popup blockers: open blank sync, then set URL
-      const w = window.open("about:blank");
       if (w) w.location.href = json.signedUrl;
       else window.location.href = json.signedUrl;
     } catch (e: any) {
+      if (w) w.close();
       setError(e?.message || "Interní chyba");
     } finally {
       setBusy(false);
@@ -324,52 +332,52 @@ export default function DealV2Page() {
               )}
             </div>
 
-            {(deal.externalUrl || attachments.length > 0) && (
-              <div className="mt-4 rounded-xl border border-navy-100 bg-white p-4">
-                <div className="text-sm font-semibold text-navy-900">Podklady</div>
+            <div className="mt-4 rounded-xl border border-navy-100 bg-white p-4">
+              <div className="text-sm font-semibold text-navy-900">Podklady</div>
 
-                {deal.externalUrl && (
-                  <div className="mt-2 text-sm">
-                    <a className="text-blue-600 underline" href={deal.externalUrl} target="_blank" rel="noreferrer">
-                      Odkaz na inzerát
-                    </a>
-                  </div>
-                )}
+              {deal.externalUrl ? (
+                <div className="mt-2 text-sm">
+                  <a className="text-blue-600 underline" href={deal.externalUrl} target="_blank" rel="noreferrer">
+                    Odkaz na inzerát
+                  </a>
+                </div>
+              ) : (
+                <div className="mt-2 text-xs text-navy-500">Odkaz na inzerát nebyl přiložen.</div>
+              )}
 
-                {attachments.length > 0 && (
-                  <div className="mt-3 space-y-2">
-                    {attachments.map((a) => (
-                      <button
-                        key={a.id}
-                        type="button"
-                        className="block w-full text-left text-sm text-blue-700 underline"
-                        onClick={() => openAttachment(a.storage_path)}
-                      >
-                        {a.file_name} ({Math.round(a.file_size / 1024)} kB)
-                      </button>
-                    ))}
-                  </div>
-                )}
+              {attachments.length > 0 ? (
+                <div className="mt-3 space-y-2">
+                  {attachments.map((a) => (
+                    <button
+                      key={a.id}
+                      type="button"
+                      className="block w-full text-left text-sm text-blue-700 underline"
+                      onClick={() => openAttachment(a.storage_path)}
+                    >
+                      {a.file_name} ({Math.round(a.file_size / 1024)} kB)
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-3 text-xs text-navy-500">Zatím bez příloh.</div>
+              )}
 
-                <div className="mt-4">
-                  <div className="text-sm font-semibold text-navy-900">Nahrát fotky / PDF</div>
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/png,image/jpeg,image/webp,image/gif,application/pdf"
-                    disabled={uploading || busy}
-                    onChange={(e) => uploadSelectedFiles(e.target.files)}
-                    className="mt-2 block w-full cursor-pointer text-sm text-navy-700 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:font-semibold file:text-navy-900 hover:file:bg-gold-300"
-                  />
-                  {uploadError && (
-                    <div className="mt-2 text-xs text-red-700">Nahrávání: {uploadError}</div>
-                  )}
-                  <div className="mt-2 text-xs text-navy-500">
-                    Upload jde přes signed URL přímo do Storage (rychlé). Max 8 souborů.
-                  </div>
+              <div className="mt-4">
+                <div className="text-sm font-semibold text-navy-900">Nahrát fotky / PDF</div>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/png,image/jpeg,image/webp,image/gif,application/pdf"
+                  disabled={uploading || busy}
+                  onChange={(e) => uploadSelectedFiles(e.target.files)}
+                  className="mt-2 block w-full cursor-pointer text-sm text-navy-700 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:font-semibold file:text-navy-900 hover:file:bg-gold-300"
+                />
+                {uploadError && <div className="mt-2 text-xs text-red-700">Nahrávání: {uploadError}</div>}
+                <div className="mt-2 text-xs text-navy-500">
+                  Upload jde přes signed URL přímo do Storage (rychlé). Max 8 souborů.
                 </div>
               </div>
-            )}
+            </div>
           </div>
 
           {!otpSent && (
