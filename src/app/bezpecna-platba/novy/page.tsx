@@ -90,12 +90,33 @@ export default function BezpecnaPlatbaNovyPage() {
     termsAccepted,
   ]);
 
+  function isFacebookLikeUrl(raw: string): boolean {
+    try {
+      const u = new URL(raw);
+      const h = u.hostname.toLowerCase();
+      return (
+        h === "facebook.com" ||
+        h.endsWith(".facebook.com") ||
+        h === "fb.com" ||
+        h.endsWith(".fb.com")
+      );
+    } catch {
+      return false;
+    }
+  }
+
   async function importOg() {
     setError("");
 
     const url = externalUrl.trim();
     if (!url) {
       setError("Vlož odkaz.");
+      return;
+    }
+
+    // Facebook často vyžaduje přihlášení a blokuje automatické načtení OG dat.
+    if (isFacebookLikeUrl(url)) {
+      setError("Facebook odkazy nejdou spolehlivě načíst (vyžadují přihlášení). Vyplň předmět a popis ručně.");
       return;
     }
 
