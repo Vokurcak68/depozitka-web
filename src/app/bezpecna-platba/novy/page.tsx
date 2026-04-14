@@ -19,12 +19,15 @@ type CreateDealResponse =
     }
   | { ok: false; error: string; details?: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
+type SendInviteResponse = { ok: true } | { ok: false; error: string; details?: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+
 
 type ImportedAttachment = {
   storagePath: string;
   fileName: string;
   contentType: string;
   fileSize: number;
+  signedUrl?: string | null;
 };
 
 type OgSnapshot = {
@@ -194,6 +197,8 @@ export default function BezpecnaPlatbaNovyPage() {
       // NOTE: OG imported images are already stored in Supabase Storage by engine.
       // We attach them to the deal on create by sending `attachments: importedAttachments`.
       // They are not added to localFiles (localFiles are only user-selected uploads).
+
+      // Optionally show previews (engine may return signedUrl per attachment)
 
       // Prefill only if user has not typed anything yet
       if (!subject.trim() && snap.title) setSubject(String(snap.title).slice(0, 180));
@@ -566,6 +571,39 @@ export default function BezpecnaPlatbaNovyPage() {
             {ogInfo && (
               <div className="mt-2 text-xs text-navy-500">
                 Načteno z odkazu (OG). Můžeš to upravit ručně.
+              </div>
+            )}
+
+            {importedAttachments.length > 0 && (
+              <div className="mt-3 rounded-2xl border border-navy-100 bg-white p-4">
+                <div className="text-sm font-semibold text-navy-900">Fotky z inzerátu</div>
+                <div className="mt-1 text-xs text-navy-500">
+                  Načteno: {importedAttachments.length}. Tyhle fotky se přiloží k nabídce.
+                </div>
+
+                <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {importedAttachments.map((a) => (
+                    <div key={a.storagePath} className="relative">
+                      <div className="aspect-square overflow-hidden rounded-lg border border-navy-100 bg-navy-50">
+                        {a.signedUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={a.signedUrl} alt={a.fileName} className="h-full w-full object-cover" />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-[10px] text-navy-500">IMG</div>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setImportedAttachments((list) => list.filter((x) => x.storagePath !== a.storagePath))}
+                        className="absolute -right-2 -top-2 rounded-full bg-navy-900 px-2 py-1 text-[10px] font-semibold text-white"
+                        aria-label="Odebrat"
+                        title="Odebrat"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </label>
