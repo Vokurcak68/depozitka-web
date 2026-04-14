@@ -12,6 +12,21 @@ type CreateDealResponse =
   | { ok: true; dealId: string; viewToken: string; status: string; inviteSent?: boolean }
   | { ok: false; error: string; details?: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
+type ImportedAttachment = {
+  storagePath: string;
+  fileName: string;
+  contentType: string;
+  fileSize: number;
+};
+
+type OgSnapshot = {
+  url: string;
+  title: string | null;
+  description: string | null;
+  fetchedAt: string;
+  images?: string[];
+};
+
 export default function BezpecnaPlatbaNovyPage() {
   const router = useRouter();
   void router; // no-op (kept for future redirects)
@@ -59,11 +74,23 @@ export default function BezpecnaPlatbaNovyPage() {
   // OG import (level 2)
   const [externalUrl, setExternalUrl] = useState<string>("");
   const [importingOg, setImportingOg] = useState(false);
+  const [externalSnapshot, setExternalSnapshot] = useState<OgSnapshot | null>(null);
+  const [importedAttachments, setImportedAttachments] = useState<ImportedAttachment[]>([]);
   const [ogInfo, setOgInfo] = useState<{ title?: string | null; description?: string | null; imageStoragePath?: string | null } | null>(null);
+
+  // Post-create upload (seller typically wants to attach photos)
+  const [postUploadBusy, setPostUploadBusy] = useState(false);
+  const [postUploadError, setPostUploadError] = useState<string>("");
+  const [postUploadDone, setPostUploadDone] = useState<number>(0);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<{ dealId: string; viewToken: string; inviteSent?: boolean } | null>(null);
+  const [success, setSuccess] = useState<{
+    dealId: string;
+    viewToken: string;
+    inviteSent?: boolean;
+    initiatorRole: "buyer" | "seller";
+  } | null>(null);
 
   const canSubmit = useMemo(() => {
     const amt = parseAmountCzk(amountCzk);
@@ -134,12 +161,20 @@ export default function BezpecnaPlatbaNovyPage() {
         return;
       }
 
-      const snap = json.snapshot || {};
+      const snap = (json.snapshot || {}) as OgSnapshot;
+      setExternalSnapshot(snap);
+
       setOgInfo({
         title: snap.title,
         description: snap.description,
         imageStoragePath: json.imageStoragePath || null,
       });
+
+      const imported = (Array.isArray((json as any).importedAttachments)
+        ? ((json as any).importedAttachments as ImportedAttachment[])
+        : [])
+        .filter((a) => a && typeof a.storagePath === "string");
+      setImportedAttachments(imported);
 
       // Prefill only if user has not typed anything yet
       if (!subject.trim() && snap.title) setSubject(String(snap.title).slice(0, 180));
@@ -183,8 +218,16 @@ export default function BezpecnaPlatbaNovyPage() {
           termsAccepted,
           termsVersion: "v1",
           externalUrl: externalUrl.trim() || null,
-          externalSnapshot: ogInfo ? { og: ogInfo } : null,
+          externalSnapshot: externalSnapshot ? { og: externalSnapshot } : null,
           externalImageStoragePath: ogInfo?.imageStoragePath || null,
+          attachments: importedAttachments.length
+            ? importedAttachments.map((a) => ({
+                storagePath: a.storagePath,
+                fileName: a.fileName,
+                contentType: a.contentType,
+                fileSize: a.fileSize,
+              }))
+            : [],
         }),
       });
 
@@ -209,7 +252,12 @@ export default function BezpecnaPlatbaNovyPage() {
       }
 
       // Show post-create screen for initiator (counterparty gets email link).
-      setSuccess({ dealId: json.dealId, viewToken: json.viewToken, inviteSent: (json as any).inviteSent });
+      setSuccess({
+        dealId: json.dealId,
+        viewToken: json.viewToken,
+        inviteSent: (json as any).inviteSent,
+        initiatorRole,
+      });
     } catch (err: any) {
       setError(err?.message || "Interní chyba");
       setTurnstileToken("");
@@ -222,6 +270,55 @@ export default function BezpecnaPlatbaNovyPage() {
   const dealLink = success
     ? `${typeof window !== "undefined" ? window.location.origin : ""}/deal/${success.dealId}?t=${encodeURIComponent(success.viewToken)}`
     : "";
+
+  async function uploadSellerFiles(dealId: string, viewToken: string, list: FileList | null) {
+    setPostUploadError("");
+    if (!list || list.length === 0) return;
+
+    setPostUploadBusy(true);
+    try {
+      const files = Array.from(list);
+
+      for (const f of files) {
+        // 1) ask engine for signed upload URL + DB row
+        const metaRes = await fetch(`${ENGINE_BASE}/api/deals/upload-url`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            dealId,
+            viewToken,
+            fileName: f.name,
+            contentType: f.type || "application/octet-stream",
+            fileSize: f.size,
+          }),
+        });
+
+        const metaJson = (await metaRes.json()) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+        if (!metaRes.ok || !metaJson?.ok || !metaJson?.signedUrl) {
+          setPostUploadError(metaJson?.error || "UPLOAD_URL_FAILED");
+          continue;
+        }
+
+        // 2) upload directly to Storage
+        const putRes = await fetch(metaJson.signedUrl, {
+          method: "PUT",
+          headers: { "content-type": f.type || "application/octet-stream" },
+          body: f,
+        });
+
+        if (!putRes.ok) {
+          setPostUploadError(`UPLOAD_FAILED_${putRes.status}`);
+          continue;
+        }
+      }
+
+      setPostUploadDone((n) => n + files.length);
+    } catch (e: any) {
+      setPostUploadError(e?.message || "UPLOAD_FAILED");
+    } finally {
+      setPostUploadBusy(false);
+    }
+  }
 
   if (success) {
     return (
@@ -265,6 +362,26 @@ export default function BezpecnaPlatbaNovyPage() {
             </div>
           </div>
 
+          {success.initiatorRole === "seller" && (
+            <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-5">
+              <div className="text-sm font-semibold text-navy-900">Fotky (prodávající)</div>
+              <div className="mt-1 text-xs text-navy-500">
+                Přilož fotky zboží – uloží se k nabídce a zůstanou i kdyby se inzerát mezitím smazal.
+              </div>
+
+              <input
+                type="file"
+                multiple
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                disabled={postUploadBusy}
+                onChange={(e) => uploadSellerFiles(success.dealId, success.viewToken, e.target.files)}
+                className="mt-3 block w-full cursor-pointer text-sm text-navy-700 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:font-semibold file:text-navy-900 hover:file:bg-gold-300"
+              />
+              {postUploadError && <div className="mt-2 text-xs text-red-700">Nahrávání: {postUploadError}</div>}
+              {postUploadDone > 0 && <div className="mt-2 text-xs text-emerald-700">Nahráno souborů: {postUploadDone}</div>}
+            </div>
+          )}
+
           <div className="mt-6 flex gap-3">
             <Button href={`/deal/${success.dealId}?t=${encodeURIComponent(success.viewToken)}`} variant="outlineDark">
               Otevřít nabídku
@@ -275,6 +392,11 @@ export default function BezpecnaPlatbaNovyPage() {
                 setSuccess(null);
                 setTurnstileToken("");
                 setTurnstileReset((n) => n + 1);
+                setExternalSnapshot(null);
+                setImportedAttachments([]);
+                setPostUploadError("");
+                setPostUploadBusy(false);
+                setPostUploadDone(0);
               }}
             >
               Vytvořit další
