@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import Section, { SectionHeader } from "@/components/Section";
@@ -271,6 +271,16 @@ export default function BezpecnaPlatbaNovyPage() {
     ? `${typeof window !== "undefined" ? window.location.origin : ""}/deal/${success.dealId}?t=${encodeURIComponent(success.viewToken)}`
     : "";
 
+  useEffect(() => {
+    if (!success) return;
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    } catch {
+      // Safari fallback
+      window.scrollTo(0, 0);
+    }
+  }, [success?.dealId]);
+
   async function uploadSellerFiles(dealId: string, viewToken: string, list: FileList | null) {
     setPostUploadError("");
     if (!list || list.length === 0) return;
@@ -329,7 +339,7 @@ export default function BezpecnaPlatbaNovyPage() {
           subtitle="Protistraně přijde email s odkazem. Bez OTP nabídku nepotvrdí."
         />
 
-        <div className="max-w-2xl">
+        <div className="max-w-2xl mx-auto">
           <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-900">
             {success.inviteSent === false
               ? "Nabídka je vytvořená, ale email se nepodařilo odeslat. Zkopíruj link a pošli ho protistraně ručně."
