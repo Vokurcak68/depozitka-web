@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Section, { SectionHeader } from "@/components/Section";
 import Button from "@/components/Button";
@@ -103,6 +103,7 @@ export default function DealV2Page() {
 
   const [busy, setBusy] = useState(false);
   const [doneMsg, setDoneMsg] = useState<string>("");
+  const topRef = useRef<HTMLDivElement | null>(null);
 
   const canOtp = useMemo(() => !!id && !!viewToken && !busy && !isFinalState, [id, viewToken, busy, isFinalState]);
 
@@ -221,6 +222,7 @@ export default function DealV2Page() {
       }
 
       await load();
+      topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (e: any) {
       setError(e?.message || "Interní chyba");
     } finally {
@@ -250,7 +252,7 @@ export default function DealV2Page() {
       )}
 
       {deal && (
-        <div className="mt-6 max-w-2xl mx-auto">
+        <div ref={topRef} className="mt-6 max-w-2xl mx-auto">
           <div className="rounded-2xl border border-navy-100 bg-white p-6 shadow-sm">
             <div className="text-sm text-navy-600">
               Stav: <span className="font-semibold text-navy-900">{statusLabel}</span>
