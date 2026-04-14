@@ -19,7 +19,6 @@ type CreateDealResponse =
     }
   | { ok: false; error: string; details?: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-type SendInviteResponse = { ok: true } | { ok: false; error: string; details?: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 type ImportedAttachment = {
   storagePath: string;
@@ -85,9 +84,16 @@ export default function BezpecnaPlatbaNovyPage() {
   const [importingOg, setImportingOg] = useState(false);
   const [externalSnapshot, setExternalSnapshot] = useState<OgSnapshot | null>(null);
   const [importedAttachments, setImportedAttachments] = useState<ImportedAttachment[]>([]);
-  const [ogInfo, setOgInfo] = useState<{ title?: string | null; description?: string | null; imageStoragePath?: string | null } | null>(null);
+  const [ogInfo, setOgInfo] = useState<{
+    title?: string | null;
+    description?: string | null;
+    imageStoragePath?: string | null;
+  } | null>(null);
 
-  // Post-create upload (seller typically wants to attach photos)
+  // Attachments selected on the first screen (queued; uploaded after create)
+  const [localFiles, setLocalFiles] = useState<File[]>([]);
+
+  // Post-create upload status
   const [postUploadBusy, setPostUploadBusy] = useState(false);
   const [postUploadError, setPostUploadError] = useState<string>("");
   const [postUploadDone, setPostUploadDone] = useState<number>(0);
@@ -97,13 +103,9 @@ export default function BezpecnaPlatbaNovyPage() {
   const [success, setSuccess] = useState<{
     dealId: string;
     viewToken: string;
-    status: "draft" | "sent";
     inviteSent?: boolean;
     initiatorRole: "buyer" | "seller";
   } | null>(null);
-
-  const [sendingInvite, setSendingInvite] = useState(false);
-  const [sendInviteError, setSendInviteError] = useState<string>("");
 
   const canSubmit = useMemo(() => {
     const amt = parseAmountCzk(amountCzk);
@@ -189,6 +191,10 @@ export default function BezpecnaPlatbaNovyPage() {
         .filter((a) => a && typeof a.storagePath === "string");
       setImportedAttachments(imported);
 
+      // NOTE: OG imported images are already stored in Supabase Storage by engine.
+      // We attach them to the deal on create by sending `attachments: importedAttachments`.
+      // They are not added to localFiles (localFiles are only user-selected uploads).
+
       // Prefill only if user has not typed anything yet
       if (!subject.trim() && snap.title) setSubject(String(snap.title).slice(0, 180));
       if (!message.trim() && snap.description) setMessage(String(snap.description).slice(0, 1000));
@@ -210,13 +216,12 @@ export default function BezpecnaPlatbaNovyPage() {
 
     setLoading(true);
     try {
-      // Create as DRAFT first (so seller can upload photos before sending)
+      // Create + send invite (single step)
       const res = await fetch(`${ENGINE_BASE}/api/deals/create`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           turnstileToken,
-          sendInvite: false,
           initiatorRole,
           initiatorEmail,
           initiatorName,
@@ -266,10 +271,16 @@ export default function BezpecnaPlatbaNovyPage() {
         return;
       }
 
+      // Upload user-selected attachments right after create
+      if (localFiles.length > 0) {
+        await uploadQueuedFiles(json.dealId, json.viewToken, localFiles);
+        setLocalFiles([]);
+      }
+
+      // Show success (email sent in the same step)
       setSuccess({
         dealId: json.dealId,
         viewToken: json.viewToken,
-        status: json.status || "draft",
         inviteSent: (json as any).inviteSent,
         initiatorRole,
       });
@@ -286,30 +297,6 @@ export default function BezpecnaPlatbaNovyPage() {
     ? `${typeof window !== "undefined" ? window.location.origin : ""}/deal/${success.dealId}?t=${encodeURIComponent(success.viewToken)}`
     : "";
 
-  async function sendInviteNow(dealId: string, viewToken: string) {
-    setSendInviteError("");
-    setSendingInvite(true);
-    try {
-      const res = await fetch(`${ENGINE_BASE}/api/deals/send-invite`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ dealId, viewToken }),
-      });
-
-      const json = (await res.json()) as SendInviteResponse;
-      if (!res.ok || !json.ok) {
-        setSendInviteError((json as any)?.error || "SEND_INVITE_FAILED");
-        return;
-      }
-
-      setSuccess((s) => (s ? { ...s, status: "sent", inviteSent: true } : s));
-    } catch (e: any) {
-      setSendInviteError(e?.message || "SEND_INVITE_FAILED");
-    } finally {
-      setSendingInvite(false);
-    }
-  }
-
   useEffect(() => {
     if (!success) return;
     try {
@@ -320,14 +307,12 @@ export default function BezpecnaPlatbaNovyPage() {
     }
   }, [success?.dealId]);
 
-  async function uploadSellerFiles(dealId: string, viewToken: string, list: FileList | null) {
+  async function uploadQueuedFiles(dealId: string, viewToken: string, files: File[]) {
     setPostUploadError("");
-    if (!list || list.length === 0) return;
+    if (!files || files.length === 0) return;
 
     setPostUploadBusy(true);
     try {
-      const files = Array.from(list);
-
       for (const f of files) {
         // 1) ask engine for signed upload URL + DB row
         const metaRes = await fetch(`${ENGINE_BASE}/api/deals/upload-url`, {
@@ -374,54 +359,16 @@ export default function BezpecnaPlatbaNovyPage() {
       <Section bg="white">
         <SectionHeader
           eyebrow="Bezpečná platba"
-          title={success.status === "sent" ? "Pozvánka odeslaná" : "Nabídka připravená"}
-          subtitle={
-            success.status === "sent"
-              ? "Protistraně přijde email s odkazem. Bez OTP nabídku nepotvrdí."
-              : "Nejdřív si přidej fotky (pokud chceš), a pak nabídku odešli protistraně."
-          }
+          title="Pozvánka odeslaná"
+          subtitle="Protistraně přijde email s odkazem. Bez OTP nabídku nepotvrdí."
         />
 
         <div className="max-w-2xl mx-auto">
-          {success.status === "sent" ? (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-900">
-              {success.inviteSent === false
-                ? "Nabídka je vytvořená, ale email se nepodařilo odeslat. Zkopíruj link a pošli ho protistraně ručně."
-                : "Email s pozvánkou je odeslaný. Čekáme na potvrzení protistrany."}
-            </div>
-          ) : (
-            <div className="rounded-2xl border border-navy-100 bg-white px-5 py-4 text-sm text-navy-900">
-              <div className="font-semibold">Ještě to není odeslané.</div>
-              <div className="mt-1 text-xs text-navy-500">
-                Tohle je schválně: jako prodávající si můžeš nejdřív přiložit fotky. Až pak to odešleš kupujícímu.
-              </div>
-            </div>
-          )}
-
-          {success.status !== "sent" && (
-            <div className="mt-4 rounded-2xl border border-navy-100 bg-white p-5">
-              <div className="text-sm font-semibold text-navy-900">Odeslání pozvánky</div>
-              <div className="mt-1 text-xs text-navy-500">
-                Až budeš mít hotovo (fotky, kontrola textu), odešli pozvánku kupujícímu.
-              </div>
-
-              <div className="mt-3 flex flex-col sm:flex-row gap-3">
-                <Button
-                  type="button"
-                  variant="primary"
-                  disabled={sendingInvite}
-                  onClick={() => sendInviteNow(success.dealId, success.viewToken)}
-                >
-                  {sendingInvite ? "Odesílám…" : "Odeslat pozvánku"}
-                </Button>
-                <Button href={`/deal/${success.dealId}?t=${encodeURIComponent(success.viewToken)}`} variant="outlineDark">
-                  Náhled nabídky
-                </Button>
-              </div>
-
-              {sendInviteError && <div className="mt-2 text-xs text-red-700">{sendInviteError}</div>}
-            </div>
-          )}
+          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-900">
+            {success.inviteSent === false
+              ? "Nabídka je vytvořená, ale email se nepodařilo odeslat. Zkopíruj link a pošli ho protistraně ručně."
+              : "Email s pozvánkou je odeslaný. Čekáme na potvrzení protistrany."}
+          </div>
 
           <div className="mt-4 rounded-2xl border border-navy-100 bg-white p-5">
             <div className="text-sm font-semibold text-navy-900">Odkaz na nabídku</div>
@@ -449,29 +396,11 @@ export default function BezpecnaPlatbaNovyPage() {
             </div>
           </div>
 
-          {success.initiatorRole === "seller" && (
+          {success.initiatorRole === "seller" && postUploadDone > 0 && (
             <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-5">
-              <div className="text-sm font-semibold text-navy-900">Fotky (prodávající)</div>
-              <div className="mt-1 text-xs text-navy-500">
-                Přilož fotky zboží – uloží se k nabídce a zůstanou i kdyby se inzerát mezitím smazal.
-              </div>
-
-              {success.status !== "sent" && (
-                <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
-                  Tip: Nahraj fotky teď a až pak klikni na „Odeslat pozvánku“.
-                </div>
-              )}
-
-              <input
-                type="file"
-                multiple
-                accept="image/png,image/jpeg,image/webp,image/gif"
-                disabled={postUploadBusy}
-                onChange={(e) => uploadSellerFiles(success.dealId, success.viewToken, e.target.files)}
-                className="mt-3 block w-full cursor-pointer text-sm text-navy-700 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:font-semibold file:text-navy-900 hover:file:bg-gold-300"
-              />
+              <div className="text-sm font-semibold text-navy-900">Přílohy</div>
+              <div className="mt-1 text-xs text-navy-500">Nahráno souborů: {postUploadDone}</div>
               {postUploadError && <div className="mt-2 text-xs text-red-700">Nahrávání: {postUploadError}</div>}
-              {postUploadDone > 0 && <div className="mt-2 text-xs text-emerald-700">Nahráno souborů: {postUploadDone}</div>}
             </div>
           )}
 
@@ -642,6 +571,28 @@ export default function BezpecnaPlatbaNovyPage() {
           </label>
 
           <label className="block sm:col-span-2">
+            <div className="text-sm font-semibold text-navy-800 mb-1">Přílohy (volitelné)</div>
+            <input
+              type="file"
+              multiple
+              accept="image/png,image/jpeg,image/webp,image/gif,application/pdf"
+              disabled={loading || postUploadBusy}
+              onChange={(e) => {
+                const list = e.target.files;
+                if (!list) return;
+                const next = Array.from(list);
+                setLocalFiles(next);
+              }}
+              className="block w-full cursor-pointer text-sm text-navy-700 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:font-semibold file:text-navy-900 hover:file:bg-gold-300"
+            />
+            <div className="mt-1 text-xs text-navy-500">
+              {localFiles.length > 0
+                ? `Vybráno souborů: ${localFiles.length}`
+                : "Můžeš přidat fotky / PDF už teď. (Nahrání proběhne po odeslání nabídky.)"}
+            </div>
+          </label>
+
+          <label className="block sm:col-span-2">
             <div className="text-sm font-semibold text-navy-800 mb-1">Předmět</div>
             <input
               value={subject}
@@ -702,8 +653,8 @@ export default function BezpecnaPlatbaNovyPage() {
         )}
 
         <div className="mt-6 flex gap-3">
-          <Button type="submit" variant="primary" disabled={loading}>
-            {loading ? "Odesílám…" : "Vytvořit nabídku"}
+          <Button type="submit" variant="primary" disabled={loading || postUploadBusy}>
+            {loading || postUploadBusy ? "Odesílám…" : "Vytvořit nabídku"}
           </Button>
           <Button href="/bezpecna-platba" variant="outlineDark">
             Zpět
