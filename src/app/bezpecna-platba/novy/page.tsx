@@ -9,8 +9,17 @@ import Button from "@/components/Button";
 const ENGINE_BASE = process.env.NEXT_PUBLIC_ENGINE_BASE || "https://engine.depozitka.eu";
 
 type CreateDealResponse =
-  | { ok: true; dealId: string; viewToken: string; status: string; inviteSent?: boolean }
+  | {
+      ok: true;
+      dealId: string;
+      viewToken: string;
+      status: "draft" | "sent";
+      inviteSent?: boolean;
+      attachedCount?: number;
+    }
   | { ok: false; error: string; details?: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+type SendInviteResponse = { ok: true } | { ok: false; error: string; details?: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 type ImportedAttachment = {
   storagePath: string;
@@ -88,9 +97,13 @@ export default function BezpecnaPlatbaNovyPage() {
   const [success, setSuccess] = useState<{
     dealId: string;
     viewToken: string;
+    status: "draft" | "sent";
     inviteSent?: boolean;
     initiatorRole: "buyer" | "seller";
   } | null>(null);
+
+  const [sendingInvite, setSendingInvite] = useState(false);
+  const [sendInviteError, setSendInviteError] = useState<string>("");
 
   const canSubmit = useMemo(() => {
     const amt = parseAmountCzk(amountCzk);
@@ -197,11 +210,13 @@ export default function BezpecnaPlatbaNovyPage() {
 
     setLoading(true);
     try {
+      // Create as DRAFT first (so seller can upload photos before sending)
       const res = await fetch(`${ENGINE_BASE}/api/deals/create`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           turnstileToken,
+          sendInvite: false,
           initiatorRole,
           initiatorEmail,
           initiatorName,
@@ -251,10 +266,10 @@ export default function BezpecnaPlatbaNovyPage() {
         return;
       }
 
-      // Show post-create screen for initiator (counterparty gets email link).
       setSuccess({
         dealId: json.dealId,
         viewToken: json.viewToken,
+        status: json.status || "draft",
         inviteSent: (json as any).inviteSent,
         initiatorRole,
       });
@@ -270,6 +285,30 @@ export default function BezpecnaPlatbaNovyPage() {
   const dealLink = success
     ? `${typeof window !== "undefined" ? window.location.origin : ""}/deal/${success.dealId}?t=${encodeURIComponent(success.viewToken)}`
     : "";
+
+  async function sendInviteNow(dealId: string, viewToken: string) {
+    setSendInviteError("");
+    setSendingInvite(true);
+    try {
+      const res = await fetch(`${ENGINE_BASE}/api/deals/send-invite`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ dealId, viewToken }),
+      });
+
+      const json = (await res.json()) as SendInviteResponse;
+      if (!res.ok || !json.ok) {
+        setSendInviteError((json as any)?.error || "SEND_INVITE_FAILED");
+        return;
+      }
+
+      setSuccess((s) => (s ? { ...s, status: "sent", inviteSent: true } : s));
+    } catch (e: any) {
+      setSendInviteError(e?.message || "SEND_INVITE_FAILED");
+    } finally {
+      setSendingInvite(false);
+    }
+  }
 
   useEffect(() => {
     if (!success) return;
@@ -335,16 +374,54 @@ export default function BezpecnaPlatbaNovyPage() {
       <Section bg="white">
         <SectionHeader
           eyebrow="Bezpečná platba"
-          title="Pozvánka odeslaná"
-          subtitle="Protistraně přijde email s odkazem. Bez OTP nabídku nepotvrdí."
+          title={success.status === "sent" ? "Pozvánka odeslaná" : "Nabídka připravená"}
+          subtitle={
+            success.status === "sent"
+              ? "Protistraně přijde email s odkazem. Bez OTP nabídku nepotvrdí."
+              : "Nejdřív si přidej fotky (pokud chceš), a pak nabídku odešli protistraně."
+          }
         />
 
         <div className="max-w-2xl mx-auto">
-          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-900">
-            {success.inviteSent === false
-              ? "Nabídka je vytvořená, ale email se nepodařilo odeslat. Zkopíruj link a pošli ho protistraně ručně."
-              : "Email s pozvánkou je odeslaný. Čekáme na potvrzení protistrany."}
-          </div>
+          {success.status === "sent" ? (
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-900">
+              {success.inviteSent === false
+                ? "Nabídka je vytvořená, ale email se nepodařilo odeslat. Zkopíruj link a pošli ho protistraně ručně."
+                : "Email s pozvánkou je odeslaný. Čekáme na potvrzení protistrany."}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-navy-100 bg-white px-5 py-4 text-sm text-navy-900">
+              <div className="font-semibold">Ještě to není odeslané.</div>
+              <div className="mt-1 text-xs text-navy-500">
+                Tohle je schválně: jako prodávající si můžeš nejdřív přiložit fotky. Až pak to odešleš kupujícímu.
+              </div>
+            </div>
+          )}
+
+          {success.status !== "sent" && (
+            <div className="mt-4 rounded-2xl border border-navy-100 bg-white p-5">
+              <div className="text-sm font-semibold text-navy-900">Odeslání pozvánky</div>
+              <div className="mt-1 text-xs text-navy-500">
+                Až budeš mít hotovo (fotky, kontrola textu), odešli pozvánku kupujícímu.
+              </div>
+
+              <div className="mt-3 flex flex-col sm:flex-row gap-3">
+                <Button
+                  type="button"
+                  variant="primary"
+                  disabled={sendingInvite}
+                  onClick={() => sendInviteNow(success.dealId, success.viewToken)}
+                >
+                  {sendingInvite ? "Odesílám…" : "Odeslat pozvánku"}
+                </Button>
+                <Button href={`/deal/${success.dealId}?t=${encodeURIComponent(success.viewToken)}`} variant="outlineDark">
+                  Náhled nabídky
+                </Button>
+              </div>
+
+              {sendInviteError && <div className="mt-2 text-xs text-red-700">{sendInviteError}</div>}
+            </div>
+          )}
 
           <div className="mt-4 rounded-2xl border border-navy-100 bg-white p-5">
             <div className="text-sm font-semibold text-navy-900">Odkaz na nabídku</div>
@@ -378,6 +455,12 @@ export default function BezpecnaPlatbaNovyPage() {
               <div className="mt-1 text-xs text-navy-500">
                 Přilož fotky zboží – uloží se k nabídce a zůstanou i kdyby se inzerát mezitím smazal.
               </div>
+
+              {success.status !== "sent" && (
+                <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+                  Tip: Nahraj fotky teď a až pak klikni na „Odeslat pozvánku“.
+                </div>
+              )}
 
               <input
                 type="file"
