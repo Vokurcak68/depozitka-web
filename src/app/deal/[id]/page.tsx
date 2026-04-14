@@ -291,7 +291,7 @@ export default function DealV2Page() {
       )}
 
       {deal && (
-        <div className="mt-6 max-w-2xl">
+        <div className="mt-6 max-w-2xl mx-auto">
           <div className="rounded-2xl border border-navy-100 bg-white p-6 shadow-sm">
             <div className="text-sm text-navy-600">
               Stav: <span className="font-semibold text-navy-900">{statusLabel}</span>

@@ -399,9 +399,14 @@ export default function BezpecnaPlatbaNovyPage() {
             <div className="mt-2 text-xs text-navy-500">
               Tenhle link slouží protistraně k vyžádání OTP a potvrzení/odmítnutí.
             </div>
+
+            <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+              Pozn.: Tohle je odkaz pro protistranu. Ty jako zadavatel už do nabídky nelez (ať se nic nemění pod rukama).
+              Pokud bude potřeba něco upravit, pošli novou nabídku.
+            </div>
           </div>
 
-          {success.initiatorRole === "seller" && postUploadDone > 0 && (
+          {postUploadDone > 0 && (
             <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-5">
               <div className="text-sm font-semibold text-navy-900">Přílohy</div>
               <div className="mt-1 text-xs text-navy-500">Nahráno souborů: {postUploadDone}</div>
@@ -410,9 +415,6 @@ export default function BezpecnaPlatbaNovyPage() {
           )}
 
           <div className="mt-6 flex gap-3">
-            <Button href={`/deal/${success.dealId}?t=${encodeURIComponent(success.viewToken)}`} variant="outlineDark">
-              Otevřít nabídku
-            </Button>
             <Button
               variant="primary"
               onClick={() => {
