@@ -222,7 +222,7 @@ export default function BezpecnaPlatbaNovyPage() {
     setLoading(true);
     try {
       // Create + send invite (single step)
-      const res = await fetch(`${ENGINE_BASE}/api/deals/create`, {
+      const res = await fetch(`/api/deals/create`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -320,7 +320,7 @@ export default function BezpecnaPlatbaNovyPage() {
     try {
       for (const f of files) {
         // 1) ask engine for signed upload URL + DB row
-        const metaRes = await fetch(`${ENGINE_BASE}/api/deals/upload-url`, {
+        const metaRes = await fetch(`/api/deals/upload-url`, {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({

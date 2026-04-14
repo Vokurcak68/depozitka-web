@@ -111,7 +111,7 @@ export default function DealV2Page() {
     setError("");
     try {
       const res = await fetch(
-        `${ENGINE_BASE}/api/deals/get?dealId=${encodeURIComponent(id)}&viewToken=${encodeURIComponent(viewToken)}`,
+        `/api/deals/get?dealId=${encodeURIComponent(id)}&viewToken=${encodeURIComponent(viewToken)}`,
       );
       const json = (await res.json()) as GetDealResponse;
       if (!res.ok || !json.ok) {
@@ -138,7 +138,7 @@ export default function DealV2Page() {
     setError("");
     setDoneMsg("");
     try {
-      const res = await fetch(`${ENGINE_BASE}/api/deals/send-otp`, {
+      const res = await fetch(`/api/deals/send-otp`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ dealId: id, viewToken }),
@@ -168,7 +168,7 @@ export default function DealV2Page() {
     setBusy(true);
     setError("");
     try {
-      const res = await fetch(`${ENGINE_BASE}/api/deals/file-url`, {
+      const res = await fetch(`/api/deals/file-url`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ dealId: id, viewToken, storagePath }),
@@ -202,7 +202,7 @@ export default function DealV2Page() {
       const payload: any = { dealId: id, viewToken, otp };
       if (kind === "reject") payload.reason = rejectReason.trim();
 
-      const res = await fetch(`${ENGINE_BASE}/api/deals/${endpoint}`, {
+      const res = await fetch(`/api/deals/${endpoint}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(payload),
