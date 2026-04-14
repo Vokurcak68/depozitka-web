@@ -365,7 +365,7 @@ export default function DealV2Page() {
               <Button onClick={sendOtp} variant="primary" disabled={!canOtp}>
                 Poslat ověřovací kód (OTP)
               </Button>
-              <div className="mt-2 text-xs text-navy-500">OTP pošleme na email protistrany.</div>
+              <div className="mt-2 text-xs text-navy-500">OTP Vám pošleme na e-mail.</div>
             </div>
           )}
 

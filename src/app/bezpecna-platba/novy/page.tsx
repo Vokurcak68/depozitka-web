@@ -364,7 +364,7 @@ export default function BezpecnaPlatbaNovyPage() {
       <Section bg="white">
         <SectionHeader
           eyebrow="Bezpečná platba"
-          title="Pozvánka odeslaná"
+          title="Nabídka odeslaná"
           subtitle="Protistraně přijde email s odkazem. Bez OTP nabídku nepotvrdí."
         />
 
@@ -372,7 +372,7 @@ export default function BezpecnaPlatbaNovyPage() {
           <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-900">
             {success.inviteSent === false
               ? "Nabídka je vytvořená, ale email se nepodařilo odeslat. Zkopíruj link a pošli ho protistraně ručně."
-              : "Email s pozvánkou je odeslaný. Čekáme na potvrzení protistrany."}
+              : "Email s nabídkou je odeslaný. Čekáme na potvrzení protistrany."}
           </div>
 
           <div className="mt-4 rounded-2xl border border-navy-100 bg-white p-5">
