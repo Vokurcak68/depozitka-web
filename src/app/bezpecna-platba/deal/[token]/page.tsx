@@ -1,24 +1,39 @@
 "use client";
 
 import { useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Section, { SectionHeader } from "@/components/Section";
 import Button from "@/components/Button";
 
-const ENGINE_BASE = process.env.NEXT_PUBLIC_ENGINE_BASE || "https://engine.depozitka.eu";
-
-// Legacy V1 page kept only as a redirect to V2.
+// Legacy V1 page kept for backward compatibility.
+// Some older emails linked to /bezpecna-platba/deal/<id>?t=<viewToken> (or without t).
 
 export default function DealDetailPage() {
+  const router = useRouter();
   const params = useParams();
+  const search = useSearchParams();
+
   const token = String((params as any)?.token || "");
+  const t = search?.get("t") || "";
+
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token);
 
   useEffect(() => {
     if (!token) return;
+    if (!isUuid) return;
 
-    // Legacy V1 token is not compatible with V2. Keep a clear message.
-    // We keep this page so old links don't 404.
-  }, [token]);
+    const next = t ? `/deal/${token}?t=${encodeURIComponent(t)}` : `/deal/${token}`;
+    router.replace(next);
+  }, [router, token, t, isUuid]);
+
+  if (isUuid) {
+    // Redirect is handled in useEffect; render a small fallback UI for the brief moment.
+    return (
+      <Section bg="white">
+        <SectionHeader eyebrow="Bezpečná platba" title="Otevírám nabídku…" subtitle="Přesměrovávám na nový detail nabídky." />
+      </Section>
+    );
+  }
 
   return (
     <Section bg="white">
