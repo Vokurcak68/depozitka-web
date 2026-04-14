@@ -10,6 +10,7 @@ const ENGINE_BASE = process.env.NEXT_PUBLIC_ENGINE_BASE || "https://engine.depoz
 type DealDto = {
   id: string;
   status: string;
+  rejectionReason?: string | null;
   initiatorRole: "buyer" | "seller";
   initiatorEmail: string;
   initiatorName: string | null;
@@ -65,6 +66,7 @@ export default function DealV2Page() {
 
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
+  const [rejectReason, setRejectReason] = useState("");
 
   const isFinalState = useMemo(() => {
     const s = String(deal?.status || "").toLowerCase();
@@ -197,10 +199,13 @@ export default function DealV2Page() {
 
     try {
       const endpoint = kind === "accept" ? "accept" : "reject";
+      const payload: any = { dealId: id, viewToken, otp };
+      if (kind === "reject") payload.reason = rejectReason.trim();
+
       const res = await fetch(`${ENGINE_BASE}/api/deals/${endpoint}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ dealId: id, viewToken, otp }),
+        body: JSON.stringify(payload),
       });
 
       const json = (await res.json()) as AcceptResponse | SimpleOk;
@@ -376,9 +381,26 @@ export default function DealV2Page() {
                 <Button onClick={() => acceptReject("accept")} variant="primary" disabled={busy || otp.trim().length < 4}>
                   Souhlasím
                 </Button>
-                <Button onClick={() => acceptReject("reject")} variant="outlineDark" disabled={busy || otp.trim().length < 4}>
-                  Nesouhlasím
-                </Button>
+              </div>
+
+              <div className="mt-3">
+                <div className="text-xs font-semibold text-navy-900">Důvod zamítnutí (povinné)</div>
+                <textarea
+                  value={rejectReason}
+                  onChange={(e) => setRejectReason(e.target.value)}
+                  className="mt-2 w-full rounded-lg border border-navy-200 px-3 py-2 text-sm"
+                  placeholder="Např. nesouhlasím s cenou / chybí fotky / špatný popis / doprava apod."
+                  rows={3}
+                />
+                <div className="mt-2 flex justify-end">
+                  <Button
+                    onClick={() => acceptReject("reject")}
+                    variant="outlineDark"
+                    disabled={busy || otp.trim().length < 4 || rejectReason.trim().length < 3}
+                  >
+                    Nesouhlasím
+                  </Button>
+                </div>
               </div>
               <div className="mt-2 text-xs text-navy-500">
                 Kód je jednorázový. Když ti to hlásí chybu, pošli OTP znovu.
@@ -391,6 +413,11 @@ export default function DealV2Page() {
               <div className="text-sm font-semibold text-emerald-900">
                 Nabídka je uzavřená: {statusLabel}
               </div>
+              {String(deal.status).toLowerCase() === "rejected" && deal.rejectionReason && (
+                <div className="mt-2 text-xs text-emerald-900/80 whitespace-pre-wrap">
+                  <span className="font-semibold">Důvod:</span> {deal.rejectionReason}
+                </div>
+              )}
               <div className="mt-1 text-xs text-emerald-900/80">
                 Už nejde posílat OTP ani měnit odpověď. Pokud potřebuješ nový návrh, iniciátor musí vytvořit novou nabídku.
               </div>
