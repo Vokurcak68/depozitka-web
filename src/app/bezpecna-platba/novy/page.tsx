@@ -28,6 +28,18 @@ export default function BezpecnaPlatbaNovyPage() {
 
   const [amountCzk, setAmountCzk] = useState<string>("");
 
+  function normalizeAmountInput(v: string) {
+    // Mobile keyboards often insert spaces/separators; keep digits only (CZK integer in MVP)
+    return v.replace(/[^0-9]/g, "");
+  }
+
+  function parseAmountCzk(v: string) {
+    const digits = normalizeAmountInput(v);
+    if (!digits) return NaN;
+    const n = Number(digits);
+    return Number.isFinite(n) ? n : NaN;
+  }
+
   const [deliveryMethod, setDeliveryMethod] = useState<"personal" | "carrier">("carrier");
   const [shippingTerms, setShippingTerms] = useState<
     "buyer_pays" | "seller_pays" | "included" | "split" | "other"
@@ -51,7 +63,7 @@ export default function BezpecnaPlatbaNovyPage() {
   const [success, setSuccess] = useState<{ dealId: string; viewToken: string; inviteSent?: boolean } | null>(null);
 
   const canSubmit = useMemo(() => {
-    const amt = Number(amountCzk);
+    const amt = parseAmountCzk(amountCzk);
     return (
       !!turnstileToken &&
       initiatorName.trim().length > 0 &&
@@ -139,7 +151,7 @@ export default function BezpecnaPlatbaNovyPage() {
           counterpartyName,
           title: subject,
           description: message,
-          totalAmountCzk: Number(amountCzk),
+          totalAmountCzk: parseAmountCzk(amountCzk),
           deliveryMethod,
           shippingTerms,
           shippingCarrier: deliveryMethod === "carrier" ? shippingCarrier : null,
@@ -276,8 +288,10 @@ export default function BezpecnaPlatbaNovyPage() {
             <div className="text-sm font-semibold text-navy-800 mb-1">Cena (Kč) — vč. dopravy</div>
             <input
               inputMode="numeric"
+              type="tel"
+              pattern="[0-9]*"
               value={amountCzk}
-              onChange={(e) => setAmountCzk(e.target.value)}
+              onChange={(e) => setAmountCzk(normalizeAmountInput(e.target.value))}
               className="w-full rounded-lg border border-navy-200 px-3 py-2"
               placeholder="např. 1250"
             />
@@ -296,10 +310,38 @@ export default function BezpecnaPlatbaNovyPage() {
           <label className="block">
             <div className="text-sm font-semibold text-navy-800 mb-1">Tvůj email</div>
             <input
+              type="email"
+              inputMode="email"
+              autoCapitalize="none"
+              autoCorrect="off"
               value={initiatorEmail}
               onChange={(e) => setInitiatorEmail(e.target.value)}
               className="w-full rounded-lg border border-navy-200 px-3 py-2"
               placeholder="jan@domena.cz"
+            />
+          </label>
+
+          <label className="block">
+            <div className="text-sm font-semibold text-navy-800 mb-1">Jméno protistrany (volitelné)</div>
+            <input
+              value={counterpartyName}
+              onChange={(e) => setCounterpartyName(e.target.value)}
+              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              placeholder="např. Petr"
+            />
+          </label>
+
+          <label className="block">
+            <div className="text-sm font-semibold text-navy-800 mb-1">Email protistrany</div>
+            <input
+              type="email"
+              inputMode="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              value={counterpartyEmail}
+              onChange={(e) => setCounterpartyEmail(e.target.value)}
+              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              placeholder="protistrana@domena.cz"
             />
           </label>
 
@@ -448,7 +490,7 @@ export default function BezpecnaPlatbaNovyPage() {
         )}
 
         <div className="mt-6 flex gap-3">
-          <Button type="submit" variant="primary" disabled={loading || !canSubmit}>
+          <Button type="submit" variant="primary" disabled={loading}>
             {loading ? "Odesílám…" : "Vytvořit nabídku"}
           </Button>
           <Button href="/bezpecna-platba" variant="outlineDark">
