@@ -66,6 +66,33 @@ export default function DealV2Page() {
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
 
+  const isFinalState = useMemo(() => {
+    const s = String(deal?.status || "").toLowerCase();
+    return ["accepted", "rejected", "expired", "cancelled", "superseded"].includes(s);
+  }, [deal?.status]);
+
+  const statusLabel = useMemo(() => {
+    const s = String(deal?.status || "").toLowerCase();
+    switch (s) {
+      case "sent":
+        return "Odesláno";
+      case "draft":
+        return "Koncept";
+      case "accepted":
+        return "Schváleno";
+      case "rejected":
+        return "Zamítnuto";
+      case "expired":
+        return "Vypršelo";
+      case "cancelled":
+        return "Zrušeno";
+      case "superseded":
+        return "Nahrazeno";
+      default:
+        return deal?.status || "";
+    }
+  }, [deal?.status]);
+
   const [attachments, setAttachments] = useState<AttachmentDto[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string>("");
@@ -73,7 +100,7 @@ export default function DealV2Page() {
   const [busy, setBusy] = useState(false);
   const [doneMsg, setDoneMsg] = useState<string>("");
 
-  const canOtp = useMemo(() => !!id && !!viewToken && !busy, [id, viewToken, busy]);
+  const canOtp = useMemo(() => !!id && !!viewToken && !busy && !isFinalState, [id, viewToken, busy, isFinalState]);
 
   async function load() {
     setLoading(true);
@@ -267,7 +294,7 @@ export default function DealV2Page() {
         <div className="mt-6 max-w-2xl">
           <div className="rounded-2xl border border-navy-100 bg-white p-6 shadow-sm">
             <div className="text-sm text-navy-600">
-              Stav: <span className="font-semibold text-navy-900">{deal.status}</span>
+              Stav: <span className="font-semibold text-navy-900">{statusLabel}</span>
             </div>
             <div className="mt-2 text-xl font-bold text-navy-900">{deal.title}</div>
             {deal.description && (
@@ -364,23 +391,32 @@ export default function DealV2Page() {
 
               <div className="mt-4">
                 <div className="text-sm font-semibold text-navy-900">Nahrát fotky / PDF</div>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/png,image/jpeg,image/webp,image/gif,application/pdf"
-                  disabled={uploading || busy}
-                  onChange={(e) => uploadSelectedFiles(e.target.files)}
-                  className="mt-2 block w-full cursor-pointer text-sm text-navy-700 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:font-semibold file:text-navy-900 hover:file:bg-gold-300"
-                />
-                {uploadError && <div className="mt-2 text-xs text-red-700">Nahrávání: {uploadError}</div>}
-                <div className="mt-2 text-xs text-navy-500">
-                  Upload jde přes signed URL přímo do Storage (rychlé). Max 8 souborů.
-                </div>
+
+                {isFinalState ? (
+                  <div className="mt-2 text-xs text-navy-500">
+                    Nabídka je už uzavřená ({statusLabel}). Další přílohy už nejdou přidat.
+                  </div>
+                ) : (
+                  <>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/png,image/jpeg,image/webp,image/gif,application/pdf"
+                      disabled={uploading || busy}
+                      onChange={(e) => uploadSelectedFiles(e.target.files)}
+                      className="mt-2 block w-full cursor-pointer text-sm text-navy-700 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:font-semibold file:text-navy-900 hover:file:bg-gold-300"
+                    />
+                    {uploadError && <div className="mt-2 text-xs text-red-700">Nahrávání: {uploadError}</div>}
+                    <div className="mt-2 text-xs text-navy-500">
+                      Upload jde přes signed URL přímo do Storage (rychlé). Max 8 souborů.
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
 
-          {!otpSent && (
+          {!otpSent && !isFinalState && (
             <div className="mt-6">
               <Button onClick={sendOtp} variant="primary" disabled={!canOtp}>
                 Poslat ověřovací kód (OTP)
@@ -389,7 +425,7 @@ export default function DealV2Page() {
             </div>
           )}
 
-          {otpSent && (
+          {otpSent && !isFinalState && (
             <div className="mt-6 rounded-2xl border border-navy-100 bg-navy-50 p-5">
               <div className="text-sm font-semibold text-navy-900">Zadej OTP</div>
               <div className="mt-3 flex flex-col sm:flex-row gap-3">
@@ -409,6 +445,17 @@ export default function DealV2Page() {
               </div>
               <div className="mt-2 text-xs text-navy-500">
                 Kód je jednorázový. Když ti to hlásí chybu, pošli OTP znovu.
+              </div>
+            </div>
+          )}
+
+          {isFinalState && (
+            <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+              <div className="text-sm font-semibold text-emerald-900">
+                Nabídka je uzavřená: {statusLabel}
+              </div>
+              <div className="mt-1 text-xs text-emerald-900/80">
+                Už nejde posílat OTP ani měnit odpověď. Pokud potřebuješ nový návrh, iniciátor musí vytvořit novou nabídku.
               </div>
             </div>
           )}
