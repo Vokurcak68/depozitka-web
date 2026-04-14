@@ -49,7 +49,7 @@ export default function Button(props: ButtonProps) {
     className = "",
   } = props;
 
-  const classes = `inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-200 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+  const classes = `inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-200 cursor-pointer touch-manipulation select-none active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 
   // Link mode
   if ("href" in props) {
@@ -74,7 +74,15 @@ export default function Button(props: ButtonProps) {
   const { onClick, type = "button", disabled = false } = props as ButtonOnlyProps;
 
   return (
-    <button type={type} className={classes} onClick={onClick} disabled={disabled}>
+    <button
+      type={type}
+      className={classes}
+      onClick={onClick}
+      onTouchStart={() => {
+        // iOS Safari: sometimes needs a touch handler to consistently treat it as interactive
+      }}
+      disabled={disabled}
+    >
       {children}
     </button>
   );
