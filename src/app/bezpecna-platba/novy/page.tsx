@@ -167,7 +167,7 @@ export default function BezpecnaPlatbaNovyPage() {
 
     setImportingOg(true);
     try {
-      const res = await fetch(`${ENGINE_BASE}/api/deals/import-og`, {
+      const res = await fetch(`/api/deals/import-og`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ url }),
