@@ -378,7 +378,12 @@ export default function DealV2Page() {
                   placeholder="123456"
                   inputMode="numeric"
                 />
-                <Button onClick={() => acceptReject("accept")} variant="primary" disabled={busy || otp.trim().length < 4}>
+                <Button
+                  onClick={() => acceptReject("accept")}
+                  variant="primary"
+                  className="w-full sm:w-auto sm:min-w-[140px]"
+                  disabled={busy || otp.trim().length < 4}
+                >
                   Souhlasím
                 </Button>
               </div>
@@ -396,6 +401,7 @@ export default function DealV2Page() {
                   <Button
                     onClick={() => acceptReject("reject")}
                     variant="outlineDark"
+                    className="w-full sm:w-auto sm:min-w-[140px]"
                     disabled={busy || otp.trim().length < 4 || rejectReason.trim().length < 3}
                   >
                     Nesouhlasím
