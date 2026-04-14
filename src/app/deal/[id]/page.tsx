@@ -94,8 +94,10 @@ export default function DealV2Page() {
   }, [deal?.status]);
 
   const [attachments, setAttachments] = useState<AttachmentDto[]>([]);
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string>("");
+  // Upload on deal page disabled by design: attachments are added only during deal creation.
+  // This prevents changing the deal "under the counterparty's hands".
+  const [uploading] = useState(false);
+  const [uploadError] = useState<string>("");
 
   const [busy, setBusy] = useState(false);
   const [doneMsg, setDoneMsg] = useState<string>("");
@@ -186,55 +188,7 @@ export default function DealV2Page() {
     }
   }
 
-  async function uploadSelectedFiles(list: FileList | null) {
-    setUploadError("");
-    if (!list || list.length === 0) return;
-
-    setUploading(true);
-    try {
-      const files = Array.from(list);
-
-      for (const f of files) {
-        // 1) ask engine for signed upload URL + DB row
-        const metaRes = await fetch(`${ENGINE_BASE}/api/deals/upload-url`, {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            dealId: id,
-            viewToken,
-            fileName: f.name,
-            contentType: f.type || "application/octet-stream",
-            fileSize: f.size,
-          }),
-        });
-
-        const metaJson = (await metaRes.json()) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
-        if (!metaRes.ok || !metaJson?.ok || !metaJson?.signedUrl) {
-          setUploadError(metaJson?.error || "UPLOAD_URL_FAILED");
-          continue;
-        }
-
-        // 2) upload directly to Storage
-        const putRes = await fetch(metaJson.signedUrl, {
-          method: "PUT",
-          headers: { "content-type": f.type || "application/octet-stream" },
-          body: f,
-        });
-
-        if (!putRes.ok) {
-          setUploadError(`UPLOAD_FAILED_${putRes.status}`);
-          continue;
-        }
-      }
-
-      // refresh list
-      await load();
-    } catch (e: any) {
-      setUploadError(e?.message || "UPLOAD_FAILED");
-    } finally {
-      setUploading(false);
-    }
-  }
+  // Upload on deal page disabled by design (attachments only during create flow).
 
   async function acceptReject(kind: "accept" | "reject") {
     setBusy(true);
@@ -391,27 +345,10 @@ export default function DealV2Page() {
 
               <div className="mt-4">
                 <div className="text-sm font-semibold text-navy-900">Nahrát fotky / PDF</div>
-
-                {isFinalState ? (
-                  <div className="mt-2 text-xs text-navy-500">
-                    Nabídka je už uzavřená ({statusLabel}). Další přílohy už nejdou přidat.
-                  </div>
-                ) : (
-                  <>
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/png,image/jpeg,image/webp,image/gif,application/pdf"
-                      disabled={uploading || busy}
-                      onChange={(e) => uploadSelectedFiles(e.target.files)}
-                      className="mt-2 block w-full cursor-pointer text-sm text-navy-700 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:font-semibold file:text-navy-900 hover:file:bg-gold-300"
-                    />
-                    {uploadError && <div className="mt-2 text-xs text-red-700">Nahrávání: {uploadError}</div>}
-                    <div className="mt-2 text-xs text-navy-500">
-                      Upload jde přes signed URL přímo do Storage (rychlé). Max 8 souborů.
-                    </div>
-                  </>
-                )}
+                <div className="mt-2 text-xs text-navy-500">
+                  Přidávání příloh na stránce nabídky je vypnuté. Přílohy se přidávají jen při vytváření nabídky, aby se
+                  nabídka nedala měnit „pod rukama“ protistrany.
+                </div>
               </div>
             </div>
           </div>
