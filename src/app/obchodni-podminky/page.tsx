@@ -48,21 +48,6 @@ export default function ObchodniPodminkyPage() {
 
       <Section bg="white">
         <article className="max-w-3xl mx-auto prose prose-slate">
-          <div className="bg-gold-50 border border-gold-200 rounded-xl p-5 mb-8">
-            <p className="text-sm text-navy-800 m-0">
-              <strong>Poznámka:</strong> Toto je pracovní verze obchodních
-              podmínek pro marketingové účely. Finální závazné znění bude
-              zveřejněno před spuštěním ostrého provozu a bude k dispozici
-              ke stažení v PDF. Dotazy směřujte na{" "}
-              <a
-                href="mailto:legal@depozitka.eu"
-                className="text-navy-900 underline"
-              >
-                legal@depozitka.eu
-              </a>
-              .
-            </p>
-          </div>
 
           <h2 className="text-2xl font-bold text-navy-900 mt-8 mb-4">
             1. Základní ustanovení
@@ -71,7 +56,7 @@ export default function ObchodniPodminkyPage() {
             Tyto obchodní podmínky upravují poskytování služby Depozitka,
             která zajišťuje nezávislou úschovu finančních prostředků při
             nákupu a prodeji zboží mezi kupujícím a prodávajícím. Provozovatelem
-            služby je společnost Depozitka s.r.o. se sídlem v Praze.
+            služby je společnost NetMate CZ spol. s r.o. se sídlem v Praze.
           </p>
 
           <h2 className="text-2xl font-bold text-navy-900 mt-8 mb-4">
@@ -91,7 +76,7 @@ export default function ObchodniPodminkyPage() {
               přijímá kupní cenu z úschovy po dokončení transakce.
             </li>
             <li>
-              <strong>Provozovatel</strong> — Depozitka s.r.o., právnická
+              <strong>Provozovatel</strong> — NetMate CZ spol. s r.o., právnická
               osoba zajišťující provoz Služby.
             </li>
             <li>
