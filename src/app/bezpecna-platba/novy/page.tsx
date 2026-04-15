@@ -457,102 +457,117 @@ export default function BezpecnaPlatbaNovyPage() {
 
       <form onSubmit={onSubmit} className="max-w-3xl mx-auto rounded-3xl border border-navy-100 bg-gradient-to-b from-white to-navy-50/40 p-5 sm:p-7 shadow-sm">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Jsi</div>
-            <select
-              value={initiatorRole}
-              onChange={(e) => setInitiatorRole(e.target.value as any)}
-              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-            >
-              <option value="buyer">Kupující</option>
-              <option value="seller">Prodávající</option>
-            </select>
-          </label>
+          <div className="sm:col-span-2 rounded-2xl border border-navy-100 bg-white p-4">
+            <div className="mb-3 text-sm font-semibold text-navy-900">Základ nabídky</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <label className="block">
+                <div className="text-sm font-semibold text-navy-800 mb-1">Jsi</div>
+                <select
+                  value={initiatorRole}
+                  onChange={(e) => setInitiatorRole(e.target.value as any)}
+                  className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
+                >
+                  <option value="buyer">Kupující</option>
+                  <option value="seller">Prodávající</option>
+                </select>
+              </label>
 
-          <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Cena (Kč)</div>
-            <input
-              inputMode="numeric"
-              type="tel"
-              pattern="[0-9]*"
-              value={amountCzk}
-              onChange={(e) => setAmountCzk(normalizeAmountInput(e.target.value))}
-              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-              placeholder="např. 1250"
-            />
-          </label>
+              <label className="block">
+                <div className="text-sm font-semibold text-navy-800 mb-1">Cena (Kč)</div>
+                <input
+                  inputMode="numeric"
+                  type="tel"
+                  pattern="[0-9]*"
+                  value={amountCzk}
+                  onChange={(e) => setAmountCzk(normalizeAmountInput(e.target.value))}
+                  className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
+                  placeholder="např. 1250"
+                />
+              </label>
+            </div>
+          </div>
 
-          <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Tvoje jméno</div>
-            <input
-              value={initiatorName}
-              onChange={(e) => setInitiatorName(e.target.value)}
-              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-              placeholder="Jan Novák"
-            />
-          </label>
+          <div className="sm:col-span-1 rounded-2xl border border-gold-200 bg-gold-50/40 p-4">
+            <div className="mb-3 text-sm font-semibold text-navy-900">Tvoje údaje</div>
+            <div className="space-y-4">
+              <label className="block">
+                <div className="text-sm font-semibold text-navy-800 mb-1">Tvoje jméno</div>
+                <input
+                  value={initiatorName}
+                  onChange={(e) => setInitiatorName(e.target.value)}
+                  className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
+                  placeholder="Jan Novák"
+                />
+              </label>
 
-          <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Tvůj email</div>
-            <input
-              type="email"
-              inputMode="email"
-              autoCapitalize="none"
-              autoCorrect="off"
-              value={initiatorEmail}
-              onChange={(e) => setInitiatorEmail(e.target.value)}
-              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-              placeholder="jan@domena.cz"
-            />
-          </label>
+              <label className="block">
+                <div className="text-sm font-semibold text-navy-800 mb-1">Tvůj email</div>
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  value={initiatorEmail}
+                  onChange={(e) => setInitiatorEmail(e.target.value)}
+                  className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
+                  placeholder="jan@domena.cz"
+                />
+              </label>
 
-          <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Tvůj telefon (volitelné)</div>
-            <input
-              type="tel"
-              inputMode="tel"
-              value={initiatorPhone}
-              onChange={(e) => setInitiatorPhone(e.target.value)}
-              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-              placeholder="např. +420 777 123 456"
-            />
-          </label>
+              <label className="block">
+                <div className="text-sm font-semibold text-navy-800 mb-1">Tvůj telefon (volitelné)</div>
+                <input
+                  type="tel"
+                  inputMode="tel"
+                  value={initiatorPhone}
+                  onChange={(e) => setInitiatorPhone(e.target.value)}
+                  className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
+                  placeholder="např. +420 777 123 456"
+                />
+              </label>
+            </div>
+          </div>
 
-          <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Jméno protistrany (volitelné)</div>
-            <input
-              value={counterpartyName}
-              onChange={(e) => setCounterpartyName(e.target.value)}
-              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-              placeholder="např. Petr"
-            />
-          </label>
-          <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Email protistrany</div>
-            <input
-              type="email"
-              inputMode="email"
-              autoCapitalize="none"
-              autoCorrect="off"
-              value={counterpartyEmail}
-              onChange={(e) => setCounterpartyEmail(e.target.value)}
-              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-              placeholder="protistrana@domena.cz"
-            />
-          </label>
+          <div className="sm:col-span-1 rounded-2xl border border-navy-200 bg-navy-50/40 p-4">
+            <div className="mb-3 text-sm font-semibold text-navy-900">Údaje protistrany</div>
+            <div className="space-y-4">
+              <label className="block">
+                <div className="text-sm font-semibold text-navy-800 mb-1">Jméno protistrany (volitelné)</div>
+                <input
+                  value={counterpartyName}
+                  onChange={(e) => setCounterpartyName(e.target.value)}
+                  className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
+                  placeholder="např. Petr"
+                />
+              </label>
 
-          <label className="block">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Telefon protistrany (volitelné)</div>
-            <input
-              type="tel"
-              inputMode="tel"
-              value={counterpartyPhone}
-              onChange={(e) => setCounterpartyPhone(e.target.value)}
-              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-              placeholder="např. +420 777 987 654"
-            />
-          </label>
+              <label className="block">
+                <div className="text-sm font-semibold text-navy-800 mb-1">Email protistrany</div>
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  value={counterpartyEmail}
+                  onChange={(e) => setCounterpartyEmail(e.target.value)}
+                  className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
+                  placeholder="protistrana@domena.cz"
+                />
+              </label>
 
+              <label className="block">
+                <div className="text-sm font-semibold text-navy-800 mb-1">Telefon protistrany (volitelné)</div>
+                <input
+                  type="tel"
+                  inputMode="tel"
+                  value={counterpartyPhone}
+                  onChange={(e) => setCounterpartyPhone(e.target.value)}
+                  className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
+                  placeholder="např. +420 777 987 654"
+                />
+              </label>
+            </div>
+          </div>
 
           <label className="block sm:col-span-2">
             <div className="text-sm font-semibold text-navy-800 mb-1">Odkaz na inzerát (volitelné)</div>
