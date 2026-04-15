@@ -680,7 +680,7 @@ export default function BezpecnaPlatbaNovyPage() {
             <div className="text-sm text-navy-800">
               Souhlasím s podmínkami služby Depozitka.
               <div className="mt-1 text-xs text-navy-500">
-                (MVP: link na podmínky doplníme; ukládáme čas souhlasu.)
+                Potvrzením souhlasíš s <a href="/obchodni-podminky" className="underline hover:text-navy-700">obchodními podmínkami</a> a uložením času souhlasu.
               </div>
             </div>
           </label>
