@@ -48,9 +48,11 @@ export default function BezpecnaPlatbaNovyPage() {
   const [initiatorRole, setInitiatorRole] = useState<"buyer" | "seller">("seller");
   const [initiatorName, setInitiatorName] = useState<string>("");
   const [initiatorEmail, setInitiatorEmail] = useState<string>("");
+  const [initiatorPhone, setInitiatorPhone] = useState<string>("");
 
   const [counterpartyName, setCounterpartyName] = useState<string>("");
   const [counterpartyEmail, setCounterpartyEmail] = useState<string>("");
+  const [counterpartyPhone, setCounterpartyPhone] = useState<string>("");
 
   const [amountCzk, setAmountCzk] = useState<string>("");
 
@@ -66,16 +68,11 @@ export default function BezpecnaPlatbaNovyPage() {
     return Number.isFinite(n) ? n : NaN;
   }
 
-  const [deliveryMethod, setDeliveryMethod] = useState<"personal" | "carrier">("carrier");
-  const [shippingTerms, setShippingTerms] = useState<
-    "buyer_pays" | "seller_pays" | "included" | "split" | "other"
-  >("included");
-  // Carrier + estimated ship date are optional; we hide them in MVP UI.
-  const [shippingCarrier, setShippingCarrier] = useState<string>("");
-  void setShippingCarrier; // kept for future UI
-  const [shippingNote, setShippingNote] = useState<string>("");
-  const [estimatedShipDate, setEstimatedShipDate] = useState<string>("");
-  void setEstimatedShipDate; // kept for future UI
+  const deliveryMethod: "personal" | "carrier" = "carrier";
+  const shippingTerms: "buyer_pays" | "seller_pays" | "included" | "split" | "other" = "included";
+  const shippingCarrier = "";
+  const shippingNote = "";
+  const estimatedShipDate = "";
 
   const [termsAccepted, setTermsAccepted] = useState(false);
 
@@ -120,7 +117,6 @@ export default function BezpecnaPlatbaNovyPage() {
       subject.trim().length > 0 &&
       Number.isFinite(amt) &&
       amt > 0 &&
-      !!deliveryMethod &&
       termsAccepted
     );
   }, [
@@ -130,8 +126,6 @@ export default function BezpecnaPlatbaNovyPage() {
     counterpartyEmail,
     subject,
     amountCzk,
-    deliveryMethod,
-    // shippingCarrier is optional + hidden in MVP
     termsAccepted,
   ]);
 
@@ -230,8 +224,10 @@ export default function BezpecnaPlatbaNovyPage() {
           initiatorRole,
           initiatorEmail,
           initiatorName,
+          initiatorPhone: initiatorPhone.trim() || null,
           counterpartyEmail,
           counterpartyName,
+          counterpartyPhone: counterpartyPhone.trim() || null,
           title: subject,
           description: message,
           totalAmountCzk: parseAmountCzk(amountCzk),
@@ -511,6 +507,18 @@ export default function BezpecnaPlatbaNovyPage() {
           </label>
 
           <label className="block">
+            <div className="text-sm font-semibold text-navy-800 mb-1">Tvůj telefon (volitelné)</div>
+            <input
+              type="tel"
+              inputMode="tel"
+              value={initiatorPhone}
+              onChange={(e) => setInitiatorPhone(e.target.value)}
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
+              placeholder="např. +420 777 123 456"
+            />
+          </label>
+
+          <label className="block">
             <div className="text-sm font-semibold text-navy-800 mb-1">Jméno protistrany (volitelné)</div>
             <input
               value={counterpartyName}
@@ -519,7 +527,6 @@ export default function BezpecnaPlatbaNovyPage() {
               placeholder="např. Petr"
             />
           </label>
-
           <label className="block">
             <div className="text-sm font-semibold text-navy-800 mb-1">Email protistrany</div>
             <input
@@ -534,40 +541,15 @@ export default function BezpecnaPlatbaNovyPage() {
             />
           </label>
 
-          <label className="block sm:col-span-2">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Typ předání</div>
-            <select
-              value={deliveryMethod}
-              onChange={(e) => setDeliveryMethod(e.target.value as any)}
-              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-            >
-              <option value="personal">Osobně</option>
-              <option value="carrier">Dopravce</option>
-            </select>
-          </label>
-
-          <label className="block sm:col-span-2">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Doprava</div>
-            <select
-              value={shippingTerms}
-              onChange={(e) => setShippingTerms(e.target.value as any)}
-              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-            >
-              <option value="buyer_pays">Platí kupující (navíc)</option>
-              <option value="seller_pays">Platí prodávající</option>
-              <option value="included">Doprava je v ceně</option>
-              <option value="split">Dělíme se</option>
-              <option value="other">Jinak / domluvou</option>
-            </select>
-          </label>
-
-          <label className="block sm:col-span-2">
-            <div className="text-sm font-semibold text-navy-800 mb-1">Poznámka k dopravě (volitelné)</div>
+          <label className="block">
+            <div className="text-sm font-semibold text-navy-800 mb-1">Telefon protistrany (volitelné)</div>
             <input
-              value={shippingNote}
-              onChange={(e) => setShippingNote(e.target.value)}
+              type="tel"
+              inputMode="tel"
+              value={counterpartyPhone}
+              onChange={(e) => setCounterpartyPhone(e.target.value)}
               className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
-              placeholder="např. Zásilkovna na výdejní místo / osobní předání Praha"
+              placeholder="např. +420 777 987 654"
             />
           </label>
 
