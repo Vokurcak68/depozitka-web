@@ -596,27 +596,38 @@ export default function BezpecnaPlatbaNovyPage() {
                 </div>
 
                 <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">
-                  {importedAttachments.map((a) => (
-                    <div key={a.storagePath} className="relative">
-                      <div className="aspect-square overflow-hidden rounded-lg border border-navy-100 bg-navy-50">
-                        {a.signedUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={a.signedUrl} alt={a.fileName} className="h-full w-full object-cover" />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center text-[10px] text-navy-500">IMG</div>
+                  {importedAttachments.map((a) => {
+                    const isPageScreenshot = /screenshot/i.test(a.fileName || "");
+
+                    return (
+                      <div key={a.storagePath} className="relative">
+                        <div className="aspect-square overflow-hidden rounded-lg border border-navy-100 bg-navy-50">
+                          {a.signedUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={a.signedUrl} alt={a.fileName} className="h-full w-full object-cover" />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center text-[10px] text-navy-500">IMG</div>
+                          )}
+                        </div>
+
+                        {isPageScreenshot && (
+                          <div className="absolute left-2 top-2 rounded-md bg-gold-400/95 px-2 py-1 text-[10px] font-semibold text-navy-900 shadow-sm">
+                            Screenshot stránky
+                          </div>
                         )}
+
+                        <button
+                          type="button"
+                          onClick={() => setImportedAttachments((list) => list.filter((x) => x.storagePath !== a.storagePath))}
+                          className="absolute -right-2 -top-2 rounded-full bg-navy-900 px-2 py-1 text-[10px] font-semibold text-white"
+                          aria-label="Odebrat"
+                          title="Odebrat"
+                        >
+                          ✕
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setImportedAttachments((list) => list.filter((x) => x.storagePath !== a.storagePath))}
-                        className="absolute -right-2 -top-2 rounded-full bg-navy-900 px-2 py-1 text-[10px] font-semibold text-white"
-                        aria-label="Odebrat"
-                        title="Odebrat"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
