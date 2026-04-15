@@ -48,26 +48,12 @@ export default function OchranaUdajuPage() {
 
       <Section bg="white">
         <article className="max-w-3xl mx-auto">
-          <div className="bg-gold-50 border border-gold-200 rounded-xl p-5 mb-8">
-            <p className="text-sm text-navy-800 m-0">
-              <strong>Poznámka:</strong> Toto je pracovní verze zásad
-              zpracování osobních údajů. Finální znění bude zveřejněno
-              před spuštěním ostrého provozu. Dotazy a žádosti směřujte na{" "}
-              <a
-                href="mailto:legal@depozitka.eu"
-                className="text-navy-900 underline"
-              >
-                legal@depozitka.eu
-              </a>
-              .
-            </p>
-          </div>
 
           <h2 className="text-2xl font-bold text-navy-900 mt-8 mb-4">
             1. Správce osobních údajů
           </h2>
           <p className="text-navy-700 leading-relaxed mb-4">
-            Správcem vašich osobních údajů je společnost Depozitka s.r.o.
+            Správcem vašich osobních údajů je společnost NetMate CZ spol. s r.o.
             se sídlem v Praze. Kontakt pro oblast ochrany osobních údajů:{" "}
             <a
               href="mailto:legal@depozitka.eu"
