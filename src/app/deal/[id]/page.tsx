@@ -360,18 +360,14 @@ export default function DealV2Page() {
             </div>
           </div>
 
-          {!otpSent && !isFinalState && (
-            <div className="mt-6">
-              <Button onClick={sendOtp} variant="primary" disabled={!canOtp}>
-                Poslat ověřovací kód (OTP)
-              </Button>
-              <div className="mt-2 text-xs text-navy-500">OTP Vám pošleme na e-mail.</div>
-            </div>
-          )}
-
-          {otpSent && !isFinalState && (
+          {!isFinalState && (
             <div className="mt-6 rounded-2xl border border-navy-100 bg-navy-50 p-5">
               <div className="text-sm font-semibold text-navy-900">Zadej OTP</div>
+
+              <div className="mt-2 text-xs text-navy-500">
+                Kód ti přišel e‑mailem. Pokud ho nemáš nebo vypršel, pošli si nový.
+              </div>
+
               <div className="mt-3 flex flex-col sm:flex-row gap-3">
                 <input
                   value={otp}
@@ -387,6 +383,14 @@ export default function DealV2Page() {
                   disabled={busy || otp.trim().length < 4}
                 >
                   Souhlasím
+                </Button>
+                <Button
+                  onClick={sendOtp}
+                  variant="outlineDark"
+                  className="w-full sm:w-auto"
+                  disabled={!canOtp}
+                >
+                  {otpSent ? "Poslat OTP znovu" : "Poslat ověřovací kód (OTP)"}
                 </Button>
               </div>
 
