@@ -58,16 +58,10 @@ export default function Navbar() {
 
           <div className="hidden lg:flex items-center gap-3">
             <Link
-              href="/kontakt"
-              className="px-4 py-2 text-sm font-semibold text-navy-700 hover:text-gold-500 transition-colors"
-            >
-              Začít používat
-            </Link>
-            <Link
-              href="/pro-provozovatele"
+              href="/bezpecna-platba"
               className="px-4 py-2 text-sm font-semibold bg-gold-400 text-navy-900 rounded-lg hover:bg-gold-500 transition-colors shadow-sm"
             >
-              Integrace do bazaru
+              Založit bezpečnou platbu
             </Link>
           </div>
 
@@ -101,11 +95,11 @@ export default function Navbar() {
                 </Link>
               ))}
               <Link
-                href="/pro-provozovatele"
+                href="/bezpecna-platba"
                 className="mt-2 mx-3 px-4 py-2.5 text-sm font-semibold bg-gold-400 text-navy-900 rounded-lg text-center"
                 onClick={() => setOpen(false)}
               >
-                Integrace do bazaru
+                Založit bezpečnou platbu
               </Link>
             </div>
           </div>
