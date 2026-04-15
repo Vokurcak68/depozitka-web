@@ -45,7 +45,7 @@ export default function BezpecnaPlatbaNovyPage() {
   const [turnstileToken, setTurnstileToken] = useState<string>("");
   const [turnstileReset, setTurnstileReset] = useState(0);
 
-  const [initiatorRole, setInitiatorRole] = useState<"buyer" | "seller">("buyer");
+  const [initiatorRole, setInitiatorRole] = useState<"buyer" | "seller">("seller");
   const [initiatorName, setInitiatorName] = useState<string>("");
   const [initiatorEmail, setInitiatorEmail] = useState<string>("");
 
@@ -444,14 +444,29 @@ export default function BezpecnaPlatbaNovyPage() {
         subtitle="Protistrana může nabídku jen potvrdit nebo odmítnout. Když odmítne, nabídku upravíš a pošleš znovu."
       />
 
-      <form onSubmit={onSubmit} className="max-w-2xl mx-auto">
+      <div className="max-w-3xl mx-auto mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="rounded-2xl border border-gold-200 bg-gold-50 px-4 py-3 text-sm text-navy-800">
+          <div className="font-semibold">1) Vyplníš</div>
+          <div className="text-xs text-navy-600">základ nabídky</div>
+        </div>
+        <div className="rounded-2xl border border-navy-200 bg-white px-4 py-3 text-sm text-navy-800">
+          <div className="font-semibold">2) Odešleš</div>
+          <div className="text-xs text-navy-600">protistraně email</div>
+        </div>
+        <div className="rounded-2xl border border-navy-200 bg-white px-4 py-3 text-sm text-navy-800">
+          <div className="font-semibold">3) Potvrdí OTP</div>
+          <div className="text-xs text-navy-600">a vznikne úschova</div>
+        </div>
+      </div>
+
+      <form onSubmit={onSubmit} className="max-w-3xl mx-auto rounded-3xl border border-navy-100 bg-gradient-to-b from-white to-navy-50/40 p-5 sm:p-7 shadow-sm">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label className="block">
             <div className="text-sm font-semibold text-navy-800 mb-1">Jsi</div>
             <select
               value={initiatorRole}
               onChange={(e) => setInitiatorRole(e.target.value as any)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
             >
               <option value="buyer">Kupující</option>
               <option value="seller">Prodávající</option>
@@ -466,7 +481,7 @@ export default function BezpecnaPlatbaNovyPage() {
               pattern="[0-9]*"
               value={amountCzk}
               onChange={(e) => setAmountCzk(normalizeAmountInput(e.target.value))}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
               placeholder="např. 1250"
             />
           </label>
@@ -476,7 +491,7 @@ export default function BezpecnaPlatbaNovyPage() {
             <input
               value={initiatorName}
               onChange={(e) => setInitiatorName(e.target.value)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
               placeholder="Jan Novák"
             />
           </label>
@@ -490,7 +505,7 @@ export default function BezpecnaPlatbaNovyPage() {
               autoCorrect="off"
               value={initiatorEmail}
               onChange={(e) => setInitiatorEmail(e.target.value)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
               placeholder="jan@domena.cz"
             />
           </label>
@@ -500,7 +515,7 @@ export default function BezpecnaPlatbaNovyPage() {
             <input
               value={counterpartyName}
               onChange={(e) => setCounterpartyName(e.target.value)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
               placeholder="např. Petr"
             />
           </label>
@@ -514,7 +529,7 @@ export default function BezpecnaPlatbaNovyPage() {
               autoCorrect="off"
               value={counterpartyEmail}
               onChange={(e) => setCounterpartyEmail(e.target.value)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
               placeholder="protistrana@domena.cz"
             />
           </label>
@@ -524,7 +539,7 @@ export default function BezpecnaPlatbaNovyPage() {
             <select
               value={deliveryMethod}
               onChange={(e) => setDeliveryMethod(e.target.value as any)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
             >
               <option value="personal">Osobně</option>
               <option value="carrier">Dopravce</option>
@@ -536,7 +551,7 @@ export default function BezpecnaPlatbaNovyPage() {
             <select
               value={shippingTerms}
               onChange={(e) => setShippingTerms(e.target.value as any)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
             >
               <option value="buyer_pays">Platí kupující (navíc)</option>
               <option value="seller_pays">Platí prodávající</option>
@@ -551,7 +566,7 @@ export default function BezpecnaPlatbaNovyPage() {
             <input
               value={shippingNote}
               onChange={(e) => setShippingNote(e.target.value)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
               placeholder="např. Zásilkovna na výdejní místo / osobní předání Praha"
             />
           </label>
@@ -563,11 +578,11 @@ export default function BezpecnaPlatbaNovyPage() {
               <input
                 value={externalUrl}
                 onChange={(e) => setExternalUrl(e.target.value)}
-                className="w-full rounded-lg border border-navy-200 px-3 py-2"
+                className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
                 placeholder="https://..."
               />
               <Button type="button" variant="secondary" disabled={importingOg || !externalUrl.trim()} onClick={importOg}>
-                {importingOg ? "Načítám…" : "Stáhnout popis (OG)"}
+                {importingOg ? "Načítám…" : "Stáhnout popis + obrázky"}
               </Button>
             </div>
             {ogInfo && (
@@ -637,7 +652,7 @@ export default function BezpecnaPlatbaNovyPage() {
             <input
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
               placeholder="např. Prodej modelu lokomotivy Roco"
             />
           </label>
@@ -647,7 +662,7 @@ export default function BezpecnaPlatbaNovyPage() {
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full rounded-lg border border-navy-200 px-3 py-2 min-h-28"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 min-h-28 shadow-sm transition-all focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200"
               placeholder="Upřesnění k nabídce…"
             />
           </label>
@@ -655,7 +670,7 @@ export default function BezpecnaPlatbaNovyPage() {
 
         <div className="mt-6">
           <div className="text-sm font-semibold text-navy-800 mb-2">Souhlas</div>
-          <label className="flex items-start gap-3 rounded-2xl border border-navy-100 bg-white p-4">
+          <label className="flex items-start gap-3 rounded-2xl border border-gold-200 bg-gold-50 p-4">
             <input
               type="checkbox"
               checked={termsAccepted}
@@ -692,13 +707,16 @@ export default function BezpecnaPlatbaNovyPage() {
           </div>
         )}
 
-        <div className="mt-6 flex gap-3">
-          <Button type="submit" variant="primary" disabled={loading || postUploadBusy}>
-            {loading || postUploadBusy ? "Odesílám…" : "Vytvořit nabídku"}
-          </Button>
-          <Button href="/bezpecna-platba" variant="outlineDark">
-            Zpět
-          </Button>
+        <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between rounded-2xl border border-navy-100 bg-white/80 p-4">
+          <div className="text-xs text-navy-600">Po odeslání dostaneš link, který pošleš protistraně.</div>
+          <div className="flex gap-3">
+            <Button type="submit" variant="primary" disabled={loading || postUploadBusy}>
+              {loading || postUploadBusy ? "Odesílám…" : "Vytvořit nabídku"}
+            </Button>
+            <Button href="/bezpecna-platba" variant="outlineDark">
+              Zpět
+            </Button>
+          </div>
         </div>
       </form>
     </Section>
