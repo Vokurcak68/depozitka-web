@@ -450,8 +450,8 @@ export default function BezpecnaPlatbaNovyPage() {
           <div className="text-xs text-navy-600">základ nabídky</div>
         </div>
         <div className="rounded-2xl border border-navy-200 bg-white px-4 py-3 text-sm text-navy-800">
-          <div className="font-semibold">2) Odešleš</div>
-          <div className="text-xs text-navy-600">protistraně email</div>
+          <div className="font-semibold">2) Systém pošle výzvu</div>
+          <div className="text-xs text-navy-600">protistrana dostane email automaticky</div>
         </div>
         <div className="rounded-2xl border border-navy-200 bg-white px-4 py-3 text-sm text-navy-800">
           <div className="font-semibold">3) Potvrdí OTP</div>
